@@ -1,0 +1,97 @@
+.caption-buttons-wrapper .btn {
+  height: 37px;
+  display: flex;
+  align-items: center;
+}
+.caption-buttons-wrapper .p-button {
+  margin-right: 5px;
+}
+
+.caption-buttons-wrapper .applied-filters {
+  background: #1e8a95;
+  font-size: 12px;
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+  margin-right: 5px;
+  color: #fff;
+}
+
+.search-popup {
+  background: #fff;
+  box-shadow: 0 3px 7px rgb(0 0 0 / 30%);
+  border: 1px solid #ccc;
+  position: absolute;
+  width: 380px;
+  padding: 20px 15px;
+  border-radius: 10px;
+  top: 55px;
+  z-index: 9;
+}
+
+.search-popup:after,
+.search-popup:before {
+  bottom: 100%;
+  left: calc(100% - 75px);
+  border: solid transparent;
+  content: '';
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.search-popup:before {
+  border-color: rgba(204, 204, 204, 0);
+  border-bottom-color: #ccc;
+  border-width: 11px;
+  margin-left: -11px;
+}
+.search-popup:after {
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #fff;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.search-popup h3 {
+  font-size: 14px;
+  font-family: 'Myriad Pro Bold', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 15px;
+  color: #4a5c80;
+}
+
+.search-popup .p-dropdown,
+.search-popup .form-control {
+  height: 30px;
+  background: #1e8a95;
+  border-color: #1e8a95;
+}
+
+.search-popup .p-dropdown .p-dropdown-label,
+.search-popup .form-control {
+  color: #fff;
+}
+
+.search-popup .p-dropdown .p-dropdown-label,
+.search-popup .p-dropdown-panel .p-dropdown-items .p-dropdown-item span {
+  font-size: 12px;
+  font-family: 'Myriad Pro Light', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: left;
+  word-break: break-word;
+}
+
+.search-popup .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  padding: 5px;
+}
+
+.search-popup .p-dropdown-trigger-icon {
+  font-size: 11px;
+  color: #fff;
+}
+
+.search-popup .form-control,
+.search-popup .form-select {
+  border-radius: 5px;
+  height: 30px;
+  padding: 0 5px;
+  font-size: 12px;
+  font-family: 'Myriad Pro Light', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 15px;
+}

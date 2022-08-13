@@ -1,0 +1,62 @@
+<div class="row">
+  <div class="col-sm-12 caption-buttons-wrapper d-flex justify-content-end align-items-center">
+    <div class="search-popup" *ngIf="showSearchOptions" [style.left.px]="left">
+      <h3>Add Search Parameter
+        <i class="pi pi-times-circle remove-filter cursor-pointer float-end" (click)="toggleSearch()"></i>
+      </h3>
+      <div class="row mt-3">
+        <div class="col-sm-4">
+          <p-dropdown class="search-popup-dropdown" [options]="filterOptions" optionLabel="header"
+            [(ngModel)]="filterColumn" optionValue="field" (onChange)="searchInput=''">
+          </p-dropdown>
+        </div>
+        <div class="col-sm-4">
+          <p-dropdown class="search-popup-dropdown" [options]="filterObject.type" optionLabel="label"
+            [(ngModel)]="filterType" optionValue="value"
+            (onChange)="dataTable.filter(searchInput, filterColumn, filterType)">
+          </p-dropdown>
+        </div>
+        <div class="col-sm-4">
+          <input type="text" class="form-control" id="search" [(ngModel)]="searchInput"
+            (input)="dataTable.filter(searchInput, filterColumn, filterType)">
+        </div>
+      </div>
+    </div>
+
+    <p-chip *ngFor="let filter of selectedFilters" styleClass="applied-filters" [label]="filter.label"
+      [removable]="true" (onRemove)="clearFilter(filter.key, filter.matchMode)"></p-chip>
+
+    <button type="button" #searchIcon *ngIf="filter" class="p-button p-button-icon-only p-button-rounded"
+      pTooltip="Filters" (click)="toggleSearch()" tooltipPosition="top">
+      <i class="pi pi-search"></i>
+    </button>
+    <ng-container>
+      <ng-template [ngTemplateOutlet]="captionTemplate"></ng-template>
+    </ng-container>
+    <button type="button" *ngIf="exportCSV" class="p-button p-button-icon-only p-button-rounded"
+      pTooltip="Export to CSV" (click)="downloadCSV()" tooltipPosition="top">
+      <i class="pi pi-file"></i>
+    </button>
+
+    <button type="button" *ngIf="exportExcel" class="p-button p-button-icon-only p-button-rounded"
+      pTooltip="Export to Excel" (click)="downloadExcel()" tooltipPosition="top">
+      <i class="pi pi-file-excel"></i>
+    </button>
+    <button type="button" class="p-button p-button-icon-only p-button-rounded" pTooltip="Show Columns"
+      (click)="toggleCaption()" tooltipPosition="top">
+      <i class="pi pi-cog"></i>
+    </button>
+    <!-- <span (click)="toggleCaption()" class="setting-caption" pTooltip="Show Columns" tooltipPosition="top"></span> -->
+    <div class="menu-items-wrapper">
+      <ul *ngIf="showColunnCaption">
+        <li class="show-columns"> Show Columns</li>
+        <li *ngFor="let col of cols;let i = index;">
+          <p-checkbox name="group2" value="col" [value]="col" [(ngModel)]="selectedColumns" [inputId]="col.field"
+            [disabled]="i === 0">
+          </p-checkbox>
+          <label [attr.for]="col.field">{{col.header}}</label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

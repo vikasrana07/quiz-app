@@ -1,0 +1,30 @@
+<div class="layout-sidebar">
+    <div class="layout-menu-container">
+        <ul class="layout-menu">
+            <li class="layout-root-menuitem" *ngFor="let menuItem of menuItems">
+                <div class="layout-menuitem-root-text">{{menuItem.name}} </div>
+                <ul>
+                    <li appSidebarMenuToggle *ngFor="let menu of menuItem.menu">
+                        <a routerLinkActive="active-route" [routerLink]="menu.href ? menu.href: null"
+                            class="p-ripple p-element">
+                            <i class="layout-menuitem-icon pi pi-fw" [ngClass]="menu.icon"></i>
+                            <span class="layout-menuitem-text">{{menu.name}}</span>
+                            <i class="pi pi-fw pi-angle-down layout-submenu-toggler" *ngIf="menu.submenu?.length"></i>
+                            <span class="p-ink"></span>
+                        </a>
+                        <ul style="height: 0px;">
+                            <li (click)="$event.stopPropagation()" *ngFor="let submenu of menu.submenu">
+                                <a routerLinkActive="active-route" [routerLink]="submenu.href"
+                                    class="p-ripple p-element">
+                                    <i class="layout-menuitem-icon pi pi-fw" [ngClass]="submenu.icon"></i>
+                                    <span class="layout-menuitem-text">{{submenu.name}}</span>
+                                    <span class="p-ink"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

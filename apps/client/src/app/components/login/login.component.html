@@ -1,0 +1,38 @@
+<div class="login-wrapper min-h-screen flex justify-content-center align-items-center">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate autocomplete="off" class="d-flex-center">
+        <div class="border-1 surface-border surface-card border-round py-7 px-4 md:px-7 z-1">
+            <div class="mb-4">
+                <div class="text-900 text-xl font-bold mb-2">Log in</div>
+                <span class="text-600 font-medium">Please enter your details</span>
+            </div>
+            <div class="flex flex-column">
+                <span class="p-input-icon-left w-full mb-4">
+                    <i class="pi pi-envelope"></i>
+                    <input id="username" type="text" placeholder="Username"
+                        [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.username.errors }"
+                        formControlName="username" class="p-inputtext p-component p-element w-full md:w-25rem">
+                </span>
+                <span class="p-input-icon-left w-full mb-4">
+                    <i class="pi pi-lock"></i>
+                    <input id="password" type="password" placeholder="Password"
+                        [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.password.errors }"
+                        formControlName="password" class="p-inputtext p-component p-element w-full md:w-25rem">
+                </span>
+                <div class="mb-4 flex flex-wrap gap-3">
+                    <div>
+                        <p-checkbox name="checkbox" value="val" styleClass="mr-2"
+                            class="p-element ng-untouched ng-pristine ng-valid">
+                        </p-checkbox>
+                        <label for="checkbox" class="text-900 font-medium mr-8">Remember Me</label>
+                    </div>
+                    <a
+                        class="text-600 cursor-pointer hover:text-primary cursor-pointer ml-auto transition-colors transition-duration-300">
+                        Reset password
+                    </a>
+                </div>
+                <button pbutton="" pripple="" label="Log In" class="p-element w-full p-button p-component"
+                    tabindex="0"><span class="p-button-label">Log In</span></button>
+            </div>
+        </div>
+    </form>
+</div>
