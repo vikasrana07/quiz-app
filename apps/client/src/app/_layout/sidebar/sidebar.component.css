@@ -1,0 +1,19 @@
+.collapse-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 9;
+  cursor: pointer;
+}
+.collapse-icon:hover {
+  color: #ccc;
+}
+.username {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: calc(100% - 50px);
+}
+.active-menu {
+  background: #424142;
+  color: #fff;
+}

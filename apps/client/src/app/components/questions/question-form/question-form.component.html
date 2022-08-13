@@ -1,0 +1,28 @@
+<form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+
+  <div class="">
+    <label for="" class="">Name:</label>
+    <p class="">
+      <input id="name" type="text" placeholder="Name"
+        [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"
+        class="p-inputtext p-component p-element w-full md:w-25rem">
+    </p>
+  </div>
+  <div class="">
+    <label for="" class="mt-2">Category:</label>
+    <p class="">
+      <p-dropdown [options]="categories"
+        [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.category.errors }" appendTo="body"
+        optionLabel="name" optionValue="id" [filter]="true" placeholder="Select Category" formControlName="category">
+      </p-dropdown>
+    </p>
+  </div>
+
+  <div class="mt-5"></div>
+  <!--   <p-footer> -->
+  <div class="col-sm-12 flex justify-content-end">
+    <button type="button" pButton class="mr-2" (click)="closeDialog()">Close</button>
+    <button type="submit" pButton>Save</button>
+  </div>
+  <!--   </p-footer> -->
+</form>

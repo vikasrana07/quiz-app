@@ -1,0 +1,6 @@
+.login-wrapper {
+  background: transparent
+    linear-gradient(180deg, var(--primary-200) 0%, var(--primary-900) 100%) 0%
+    0% no-repeat padding-box;
+  height: 100%;
+}

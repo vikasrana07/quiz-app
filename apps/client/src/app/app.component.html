@@ -1,9 +1,14 @@
-<div style="text-align: center">
-  <h1>Welcome to client!</h1>
-  <img
-    width="450"
-    src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-    alt="Nx - Smart, Fast and Extensible Build System"
-  />
+<ngx-ui-loader></ngx-ui-loader>
+<p-toast [preventOpenDuplicates]="true" [baseZIndex]="1001"></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+<div
+    class="layout-container layout-light layout-colorscheme-menu layout-static layout-static-inactive p-ripple-disabled">
+    <quiz-app-sidebar *ngIf="appLayout"></quiz-app-sidebar>
+    <div [ngClass]="{'layout-content-wrapper': appLayout}">
+        <quiz-app-header *ngIf="appLayout"></quiz-app-header>
+        <div [ngClass]="{'layout-content': appLayout}">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+    <!-- <quiz-app-footer *ngIf="appLayout"></quiz-app-footer> -->
 </div>
-<div>Message: {{ hello$ | async | json }}</div>

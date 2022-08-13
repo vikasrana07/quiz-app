@@ -1,0 +1,47 @@
+<p-table #dt [value]="rows" [dataKey]="dataKey" [(selection)]="selectedColumns" [rows]="paginationObject.itemsPerPage"
+  [showCurrentPageReport]="true" [rowsPerPageOptions]="paginationObject.availableLimits" responsiveLayout="scroll"
+  [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+  [globalFilterFields]="globalFilterFields">
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-between align-items-center flex-column sm:flex-row">
+      <div class="justify-content-start">List of {{name}}</div>
+      <div class="p-input-icon-left justify-content-end">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" #input (input)="dt.filterGlobal(input.value, 'contains')"
+          placeholder="Search Keyword" class="mr-2" />
+        <ng-template [ngTemplateOutlet]="captionTemplate"></ng-template>
+      </div>
+
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header" *ngIf="!header">
+    <tr>
+      <th [pSortableColumnDisabled]="!col.sort" pSortableColumn="{{col.field}}" *ngFor="let col of cols"
+        isEllipsisActive>
+        {{col.header}}<p-sortIcon field="{{col.field}}" *ngIf="col.sort"></p-sortIcon>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template let-row pTemplate="body" *ngIf="!body">
+    <tr>
+      <td *ngFor="let col of cols" isEllipsisActive>
+        <span>{{row[col.field]}}</span>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-container *ngIf="templates">
+    <ng-container *ngFor="let temp of templates">
+      <ng-template [pTemplate]="temp.type" let-row>
+        <ng-template [ngTemplateOutlet]="temp.template" [ngTemplateOutletContext]="{
+        columns : selectedColumns,
+        row : row
+      }"></ng-template>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td [attr.colspan]="cols.length" class="text-center">No records found.</td>
+    </tr>
+  </ng-template>
+</p-table>
