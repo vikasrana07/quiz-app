@@ -5,101 +5,74 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 
-import { QuestionsService } from '../questions.service';
+import { CategoriesService } from '../categories.service';
 import { AlertService, LoaderService } from '../../../_services';
 import { CommonModule } from '@angular/common';
-import { CategoriesService } from '../../categories/categories.service';
 import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
-  selector: 'quiz-app-question-form',
-  templateUrl: './question-form.component.html',
+  selector: 'quiz-app-category-form',
+  templateUrl: './category-form.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, DropdownModule, CommonModule],
-  providers: [CategoriesService]
+  imports: [ReactiveFormsModule, ButtonModule, DropdownModule, CommonModule]
 })
-export class QuestionFormComponent implements OnInit {
+export class CategoryFormComponent implements OnInit {
   isSubmitted!: boolean;
   selectedRow: any;
-  questionForm: FormGroup | any;;
-  categories: any;
+  categoryForm: FormGroup | any;
   constructor(
     private categoriesService: CategoriesService,
-    private questionsService: QuestionsService,
     private loaderService: LoaderService,
     private alertService: AlertService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig
   ) {
     this.selectedRow = config.data;
-    this.createQuestionForm();
+    this.createCategoryForm();
   }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.getCategories();
-    });
+    this.preSelect();
   }
   preSelect() {
     if (Object.keys(this.selectedRow).length) {
-      this.questionForm.setValue({
+      this.categoryForm.setValue({
         name: this.selectedRow.name,
         categoryId: this.selectedRow.categoryId
       });
     }
   }
-  getCategories() {
-    this.loaderService.start();
-    this.categoriesService
-      .getCategories()
-      .subscribe({
-        next: (response: any) => {
-          this.loaderService.stop();
-          this.categories = response.data;
-          this.preSelect();
-        },
-        error: (error: any) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
-        }
-      });
-  }
-  createQuestionForm() {
-    this.questionForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      categoryId: new FormControl('', [Validators.required])
+  createCategoryForm() {
+    this.categoryForm = new FormGroup({
+      name: new FormControl('', [Validators.required])
     });
   }
-  get formControls(): any { return this.questionForm.controls; }
+  get formControls(): any { return this.categoryForm.controls; }
 
   onSubmit() {
     this.isSubmitted = true;
-    if (this.questionForm.invalid) {
+    if (this.categoryForm.invalid) {
       return;
     }
 
     const data: any = {
-      "name": this.formControls.name.value,
-      "category": this.formControls.categoryId.value
+      "name": this.formControls.name.value
     }
     if (Object.keys(this.selectedRow).length) {
-      this.updateQuestion(data);
+      this.updateCategory(data);
     } else {
-      this.createQuestion(data);
+      this.createCategory(data);
     }
   }
-  createQuestion(data: any) {
+  createCategory(data: any) {
     this.loaderService.start();
-    this.questionsService
-      .createQuestion(data)
+    this.categoriesService
+      .createCategory(data)
       .subscribe({
         next: (response: any) => {
           this.loaderService.stop();
           this.alertService.success(response["message"]);
-          const category = this.categories.find((item: any) => item.id == data.category);
           data.id = response?.data?.id;
-          data.categoryId = category.id;
-          data.categoryName = category.name;
           this.closeDialog(data);
         },
         error: (error: any) => {
@@ -108,18 +81,15 @@ export class QuestionFormComponent implements OnInit {
         }
       });
   }
-  updateQuestion(data: any) {
+  updateCategory(data: any) {
     this.loaderService.start();
-    this.questionsService
-      .updateQuestion(this.selectedRow.id, data)
+    this.categoriesService
+      .updateCategory(this.selectedRow.id, data)
       .subscribe({
         next: (response: any) => {
           this.loaderService.stop();
           this.alertService.success(response["message"]);
-          const category = this.categories.find((item: any) => item.id == data.category);
           data.id = this.selectedRow.id;
-          data.categoryId = category.id;
-          data.categoryName = category.name;
           this.closeDialog(data);
         },
         error: (error: any) => {

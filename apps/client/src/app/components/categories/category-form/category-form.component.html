@@ -1,19 +1,10 @@
-<form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
   <div>
     <label>Name:</label>
     <p>
       <input id="name" type="text" placeholder="Name"
         [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"
         class="p-inputtext p-component p-element w-full md:w-25rem">
-    </p>
-  </div>
-  <div>
-    <label class="mt-2">Category:</label>
-    <p>
-      <p-dropdown styleClass="w-full md:w-25rem" [options]="categories"
-        [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.categoryId.errors }" appendTo="body"
-        optionLabel="name" optionValue="id" [filter]="true" placeholder="Select Category" formControlName="categoryId">
-      </p-dropdown>
     </p>
   </div>
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -16,20 +16,20 @@ export class CategoriesService {
     return await this.categoryRepository.find();
   }
 
-  async create(data: CategoriesDTO) {
-    const user = this.categoryRepository.create(data);
-    await this.categoryRepository.save(data);
-    return user;
+  async create(body: CategoriesDTO) {
+    const username = await this.categoryRepository.findOne({ where: { name: body.name } });
+    if (username != null) {
+      throw new HttpException('Category already exists', HttpStatus.CONFLICT);
+    } else {
+      const data = this.categoryRepository.create(body);
+      return await this.categoryRepository.save(data);
+    }
   }
 
-  async read(id: number) {
+  async update(id: number, data: Partial<CategoriesDTO>) {
+    await this.categoryRepository.update({ id }, data);
     return await this.categoryRepository.findOne({ where: { id: id } });
   }
-
-  /* async update(id: number, data: Partial<CategoriesDTO>) {
-    await this.categoryRepository.update({ id }, data);
-    return await this.categoryRepository.findOne({ id });
-  } */
 
   async delete(id: number) {
     await this.categoryRepository.delete({ id: id });

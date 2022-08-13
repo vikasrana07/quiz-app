@@ -30,33 +30,23 @@ export class CategoriesController {
   }
 
   @Post()
-  async createUsers(@Body() data: CategoriesDTO) {
-    const user = await this.categoriesService.create(data);
+  async createCategory(@Body() body: CategoriesDTO) {
+    const data = await this.categoriesService.create(body);
     return {
       statusCode: HttpStatus.OK,
-      message: 'User created successfully',
-      user
+      message: 'Category created successfully',
+      data
     };
   }
 
-  @Get(':id')
-  async readUser(@Param('id') id: number) {
-    const data = await this.categoriesService.read(id);
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'User fetched successfully',
-      data,
-    };
-  }
-
-  /* @Patch(':id')
-  async uppdateUser(@Param('id') id: number, @Body() data: Partial<CategoriesDTO>) {
+  @Patch(':id')
+  async updateCategory(@Param('id') id: number, @Body() data: Partial<CategoriesDTO>) {
     await this.categoriesService.update(id, data);
     return {
       statusCode: HttpStatus.OK,
-      message: 'User updated successfully',
+      message: 'Category updated successfully',
     };
-  } */
+  }
 
   @Delete(':id')
   async deleteCategory(@Param('id') id: number) {

@@ -26,6 +26,10 @@ export class HttpService {
     return this.httpClient.put(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
   }
 
+  patch(apiRoute: string, body: any): Observable<any> {
+    return this.httpClient.patch(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
+  }
+
   delete(apiRoute: string): Observable<any> {
     return this.httpClient.delete(`${this.url + apiRoute}`, { headers: this.getHttpHeaders() });
   }

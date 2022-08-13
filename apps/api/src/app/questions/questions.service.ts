@@ -16,20 +16,19 @@ export class QuestionsService {
     return await this.questionsRepository.find({ relations: ['category'] });
   }
 
-  async create(data: QuestionsDTO) {
-    const user = this.questionsRepository.create(data);
-    await this.questionsRepository.save(data);
-    return user;
+  async create(body: QuestionsDTO) {
+    const data = this.questionsRepository.create(body);
+    return await this.questionsRepository.save(data);
   }
 
-  async read(id: number) {
+  /* async read(id: number) {
+    return await this.questionsRepository.findOne({ where: { id: id } });
+  } */
+
+  async update(id: number, data: Partial<QuestionsDTO>) {
+    await this.questionsRepository.update({ id }, data);
     return await this.questionsRepository.findOne({ where: { id: id } });
   }
-
-  /* async update(id: number, data: Partial<QuestionsDTO>) {
-    await this.questionsRepository.update({ id }, data);
-    return await this.questionsRepository.findOne({ id });
-  } */
 
   async delete(id: number) {
     await this.questionsRepository.delete({ id: id });

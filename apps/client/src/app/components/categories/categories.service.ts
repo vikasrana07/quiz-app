@@ -14,6 +14,12 @@ export class CategoriesService {
     return this.httpService.get('categories');
   }
 
+  createCategory(data: any): Observable<HttpResponse<any>> {
+    return this.httpService.post('categories', data);
+  }
+  updateCategory(id: number, data: any): Observable<HttpResponse<any>> {
+    return this.httpService.patch('categories/' + id, data);
+  }
   deleteCategory(id: number): Observable<HttpResponse<any>> {
     return this.httpService.delete('categories/' + id);
   }
