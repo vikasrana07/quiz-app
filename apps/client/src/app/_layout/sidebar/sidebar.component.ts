@@ -54,6 +54,32 @@ export class SidebarComponent implements OnInit {
             ]
           }
         ]
+      },
+      {
+        name: 'Manage Users',
+        menu: [
+          {
+            name: 'Users',
+            icon: 'pi-users',
+            submenu: [
+              {
+                name: 'List',
+                href: ['/users'],
+                icon: 'pi-image',
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'Manage Settings',
+        menu: [
+          {
+            name: 'Settings',
+            icon: 'pi-cog',
+            href: ['/settings'],
+          }
+        ]
       }
     ];
   }

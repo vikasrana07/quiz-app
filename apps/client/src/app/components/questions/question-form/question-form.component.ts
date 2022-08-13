@@ -10,12 +10,13 @@ import { AlertService, LoaderService } from '../../../_services';
 import { CommonModule } from '@angular/common';
 import { CategoriesService } from '../../categories/categories.service';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'quiz-app-question-form',
   templateUrl: './question-form.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, DropdownModule, CommonModule],
+  imports: [ReactiveFormsModule, ButtonModule, DropdownModule, InputTextModule, CommonModule],
   providers: [CategoriesService]
 })
 export class QuestionFormComponent implements OnInit {

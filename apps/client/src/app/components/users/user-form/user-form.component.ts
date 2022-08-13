@@ -5,31 +5,32 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 
-import { CategoriesService } from '../categories.service';
+import { UsersService } from '../users.service';
 import { AlertService, LoaderService } from '../../../_services';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'quiz-app-category-form',
-  templateUrl: './category-form.component.html',
+  selector: 'quiz-app-user-form',
+  templateUrl: './user-form.component.html',
   standalone: true,
   imports: [ReactiveFormsModule, ButtonModule, DropdownModule, InputTextModule, CommonModule]
 })
-export class CategoryFormComponent implements OnInit {
+export class UserFormComponent implements OnInit {
   isSubmitted!: boolean;
   selectedRow: any;
-  categoryForm: FormGroup | any;
+  userForm: FormGroup | any;;
+  categories: any;
   constructor(
-    private categoriesService: CategoriesService,
+    private usersService: UsersService,
     private loaderService: LoaderService,
     private alertService: AlertService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig
   ) {
     this.selectedRow = config.data;
-    this.createCategoryForm();
+    this.createuserForm();
   }
 
   ngOnInit(): void {
@@ -37,43 +38,56 @@ export class CategoryFormComponent implements OnInit {
   }
   preSelect() {
     if (Object.keys(this.selectedRow).length) {
-      this.categoryForm.setValue({
-        name: this.selectedRow.name,
-        categoryId: this.selectedRow.categoryId
+      this.userForm.patchValue({
+        firstName: this.selectedRow.firstName,
+        lastName: this.selectedRow.lastName,
+        username: this.selectedRow.username,
+        email: this.selectedRow.email,
       });
     }
   }
-  createCategoryForm() {
-    this.categoryForm = new FormGroup({
-      name: new FormControl('', [Validators.required])
+
+  createuserForm() {
+    this.userForm = new FormGroup({
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      username: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required]),
+      password: new FormControl('')
     });
   }
-  get formControls(): any { return this.categoryForm.controls; }
+  get formControls(): any { return this.userForm.controls; }
 
   onSubmit() {
     this.isSubmitted = true;
-    if (this.categoryForm.invalid) {
+    if (this.userForm.invalid) {
       return;
     }
 
     const data: any = {
-      "name": this.formControls.name.value
+      "firstName": this.formControls.firstName.value,
+      "lastName": this.formControls.lastName.value,
+      "username": this.formControls.username.value,
+      "email": this.formControls.email.value
     }
     if (Object.keys(this.selectedRow).length) {
-      this.updateCategory(data);
+      this.updateUser(data);
     } else {
-      this.createCategory(data);
+      this.createUser(data);
     }
   }
-  createCategory(data: any) {
+  createUser(data: any) {
     this.loaderService.start();
-    this.categoriesService
-      .createCategory(data)
+    this.usersService
+      .createUser(data)
       .subscribe({
         next: (response: any) => {
           this.loaderService.stop();
           this.alertService.success(response["message"]);
+          const category = this.categories.find((item: any) => item.id == data.category);
           data.id = response?.data?.id;
+          data.categoryId = category.id;
+          data.categoryName = category.name;
           this.closeDialog(data);
         },
         error: (error: any) => {
@@ -82,15 +96,18 @@ export class CategoryFormComponent implements OnInit {
         }
       });
   }
-  updateCategory(data: any) {
+  updateUser(data: any) {
     this.loaderService.start();
-    this.categoriesService
-      .updateCategory(this.selectedRow.id, data)
+    this.usersService
+      .updateUser(this.selectedRow.id, data)
       .subscribe({
         next: (response: any) => {
           this.loaderService.stop();
           this.alertService.success(response["message"]);
+          const category = this.categories.find((item: any) => item.id == data.category);
           data.id = this.selectedRow.id;
+          data.categoryId = category.id;
+          data.categoryName = category.name;
           this.closeDialog(data);
         },
         error: (error: any) => {

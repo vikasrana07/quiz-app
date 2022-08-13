@@ -1,0 +1,22 @@
+<form [formGroup]="settingForm" (ngSubmit)="onSubmit()">
+    <div class="card p-fluid">
+        <div class="field grid">
+            <label htmlfor="timePerQuestion" class="col-12 mb-2 md:col-2 md:mb-0">Time Per Question</label>
+            <div class="col-12 md:col-6"><input aria-label="Time Per Question" pInputText id="timePerQuestion"
+                    type="text"
+                    [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.timePerQuestion.errors }"
+                    formControlName="timePerQuestion"></div>
+        </div>
+        <div class="field grid">
+            <label htmlfor="coinPerAnswer" class="col-12 mb-2 md:col-2 md:mb-0">Coin Per Answer</label>
+            <div class="col-12 md:col-6"><input aria-label="Coin Per Answer" pInputText id="coinPerAnswer" type="text"
+                    [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.coinPerAnswer.errors }"
+                    formControlName="coinPerAnswer">
+            </div>
+        </div>
+    </div>
+    <div class="mt-5"></div>
+    <div class="flex justify-content-end">
+        <button type="submit" pButton>Update</button>
+    </div>
+</form>

@@ -1,0 +1,40 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+  <div class="card p-fluid">
+    <div class="field grid">
+      <label htmlfor="firstName" class="col-12 mb-2 md:col-2 md:mb-0">First Name</label>
+      <div class="col-12 md:col-6"><input aria-label="First Name" pInputText id="firstName" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.firstName.errors }"
+          formControlName="firstName"></div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="lastName" class="col-12 mb-2 md:col-2 md:mb-0">Last Name</label>
+      <div class="col-12 md:col-6"><input aria-label="Last Name" pInputText id="lastName" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.lastName.errors }" formControlName="lastName">
+      </div>
+    </div>
+
+    <div class="field grid">
+      <label htmlfor="username" class="col-12 mb-2 md:col-2 md:mb-0">Username</label>
+      <div class="col-12 md:col-6"><input aria-label="Username" pInputText id="username" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.username.errors }" formControlName="username">
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="email" class="col-12 mb-2 md:col-2 md:mb-0">Email</label>
+      <div class="col-12 md:col-6"><input aria-label="Email" pInputText id="email" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.email.errors }" formControlName="email"></div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="password" class="col-12 mb-2 md:col-2 md:mb-0">Password</label>
+      <div class="col-12 md:col-6"><input aria-label="Password" pInputText id="password" type="password"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.password.errors }" formControlName="password">
+      </div>
+    </div>
+  </div>
+  <div class="mt-5"></div>
+  <div class="flex justify-content-end">
+    <button type="button" pButton class="mr-2" (click)="closeDialog()">Close</button>
+    <button type="submit" pButton>Save</button>
+  </div>
+</form>

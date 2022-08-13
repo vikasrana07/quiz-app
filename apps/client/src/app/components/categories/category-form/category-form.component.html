@@ -1,11 +1,10 @@
 <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label>Name:</label>
-    <p>
-      <input id="name" type="text" placeholder="Name"
-        [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"
-        class="p-inputtext p-component p-element w-full md:w-25rem">
-    </p>
+  <div class="card p-fluid">
+    <div class="field grid">
+      <label htmlfor="name" class="col-12 mb-2 md:col-2 md:mb-0">Name</label>
+      <div class="col-12 md:col-6"><input aria-label="Name" pInputText id="name" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"></div>
+    </div>
   </div>
 
   <div class="mt-5"></div>
