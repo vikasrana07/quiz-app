@@ -1,19 +1,21 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { JwtService } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
+import { AppMiddleware } from './common/middlewares/app.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { CategoriesModule } from './categories/categories.module';
 import { QuestionsModule } from './questions/questions.module';
 
+import { SettingsModule } from './settings/settings.module';
 import { UsersEntity } from './users/users.entity';
 import { CategoriesEntity } from './categories/categories.entity';
 import { QuestionsEntity } from './questions/questions.entity';
-import { AppMiddleware } from './common/middlewares/app.middleware';
-import { JwtService } from '@nestjs/jwt';
+import { SettingsEntity } from './settings/settings.entity';
 import { UsersService } from './users/users.service';
 
 @Module({
@@ -28,7 +30,8 @@ import { UsersService } from './users/users.service';
       entities: [
         CategoriesEntity,
         QuestionsEntity,
-        UsersEntity
+        UsersEntity,
+        SettingsEntity
       ],
       // entities: ['../typeorm/entities/*.ts'],
       synchronize: true,
@@ -37,7 +40,8 @@ import { UsersService } from './users/users.service';
     AuthModule,
     CategoriesModule,
     QuestionsModule,
-    UsersModule
+    UsersModule,
+    SettingsModule
   ],
   controllers: [AppController],
   providers: [AppService, UsersService, JwtService],

@@ -29,6 +29,18 @@ export const APP_ROUTES: Routes = [
     canActivate: [AuthGuard],
     title: 'Categories'
   },
+  {
+    path: 'users',
+    loadComponent: () => import('./components/users/users.component').then(m => m.UsersComponent),
+    canActivate: [AuthGuard],
+    title: 'Users'
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./components/settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [AuthGuard],
+    title: 'Settings'
+  },
   // otherwise redirect to 404
   { path: '**', redirectTo: '/404' }
 ];
