@@ -16,6 +16,9 @@ export class QuestionsService {
   createQuestion(data: any): Observable<HttpResponse<any>> {
     return this.httpService.post('questions', data);
   }
+  updateQuestion(id: number, data: any): Observable<HttpResponse<any>> {
+    return this.httpService.patch('questions/' + id, data);
+  }
   deleteQuestion(id: number): Observable<HttpResponse<any>> {
     return this.httpService.delete('questions/' + id);
   }

@@ -35,7 +35,7 @@ export class QuestionsComponent implements OnInit {
     this.cols = [
       { field: 'id', header: 'ID' },
       { field: 'name', header: 'Name' },
-      { field: 'category', header: 'Category' },
+      { field: 'categoryName', header: 'Category' },
       { field: 'action', header: 'Action', sort: false, filter: false }
     ];
     this.getQuestions();
@@ -54,7 +54,8 @@ export class QuestionsComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           response.data.forEach((item: any) => {
-            item.category = item.category.name;
+            item.categoryId = item.category?.id;
+            item.categoryName = item.category?.name;
           })
           this.rows = response.data;
           this.loaderService.stop();
@@ -73,9 +74,7 @@ export class QuestionsComponent implements OnInit {
     cm.show(event);
     return false;
   }
-  update(row: Category) {
 
-  }
   delete(row: Category) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete the question?',
@@ -99,11 +98,22 @@ export class QuestionsComponent implements OnInit {
     });
   }
   add() {
-    const ref = this.dynamicDialogService.showInformationDialog(QuestionFormComponent, 'Add New Question', {}, { width: '60%', height: '100%', class: 'dialog-wrapper-white-background' });
+    const ref = this.dynamicDialogService.showInformationDialog(QuestionFormComponent, 'Add New Question', {}, { width: '60%', height: '100%' });
     ref.onClose.subscribe((data) => {
       if (data) {
         this.rows.push(data);
         this.rows = [...this.rows];
+      }
+    });
+  }
+  update(row: Category) {
+    const ref = this.dynamicDialogService.showInformationDialog(QuestionFormComponent, 'Edit Question', row, { width: '60%', height: '100%' });
+    ref.onClose.subscribe((data) => {
+      if (data) {
+        const index = this.rows.findIndex((x: any) => x.id === data.id);
+        if (index != -1) {
+          this.rows[index] = data;
+        }
       }
     });
   }

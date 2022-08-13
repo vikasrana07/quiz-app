@@ -5,17 +5,18 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { XTableComponent } from '../../shared/components/x-table/x-table.component';
 import { ThreeDotMenuComponent } from '../../shared/three-dot-menu/three-dot-menu.component';
 import { Category } from '../../_models';
-import { AlertService, LoaderService } from '../../_services';
+import { AlertService, DynamicDialogService, LoaderService } from '../../_services';
 import { CategoriesService } from './categories.service';
 import { CommonModule } from '@angular/common';
+import { CategoryFormComponent } from './category-form/category-form.component';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
   selector: 'quiz-app-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.css'],
   standalone: true,
   imports: [XTableComponent, ThreeDotMenuComponent, CommonModule, ContextMenuModule],
-  providers: [CategoriesService]
+  providers: [CategoriesService, AlertService, LoaderService, DialogService, DynamicDialogService]
 })
 export class CategoriesComponent implements OnInit {
   cols: any;
@@ -23,6 +24,7 @@ export class CategoriesComponent implements OnInit {
   selectedRow!: Category;
   items!: MenuItem[];
   constructor(
+    private dynamicDialogService: DynamicDialogService,
     private confirmationService: ConfirmationService,
     private alertService: AlertService,
     private loaderService: LoaderService,
@@ -67,8 +69,25 @@ export class CategoriesComponent implements OnInit {
     cm.show(event);
     return false;
   }
+  add() {
+    const ref = this.dynamicDialogService.showInformationDialog(CategoryFormComponent, 'Add New Category', {}, { width: '60%', height: '100%' });
+    ref.onClose.subscribe((data) => {
+      if (data) {
+        this.rows.push(data);
+        this.rows = [...this.rows];
+      }
+    });
+  }
   update(row: Category) {
-
+    const ref = this.dynamicDialogService.showInformationDialog(CategoryFormComponent, 'Edit Category', row, { width: '60%', height: '100%' });
+    ref.onClose.subscribe((data) => {
+      if (data) {
+        const index = this.rows.findIndex((x: any) => x.id === data.id);
+        if (index != -1) {
+          this.rows[index] = data;
+        }
+      }
+    });
   }
   delete(row: Category) {
     this.confirmationService.confirm({

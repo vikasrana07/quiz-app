@@ -5,7 +5,7 @@ import { CategoriesEntity } from './../categories/categories.entity';
 @Entity('questions')
 export class QuestionsEntity extends AbstractEntity {
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @ManyToOne(() => CategoriesEntity, (category: CategoriesEntity) => category.id)

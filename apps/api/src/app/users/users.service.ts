@@ -20,9 +20,9 @@ export class UsersService {
     const username = await this.usersRepository.findOne({ where: { username: data.username } });
     const email = await this.usersRepository.findOne({ where: { email: data.email } });
     if (username != null) {
-      throw new HttpException('Username already exists', HttpStatus.NOT_FOUND);
+      throw new HttpException('Username already exists', HttpStatus.CONFLICT);
     } else if (email != null) {
-      throw new HttpException('Email already exists', HttpStatus.NOT_FOUND);
+      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
     } else {
       const user = this.usersRepository.create(data);
       await this.usersRepository.save(data);

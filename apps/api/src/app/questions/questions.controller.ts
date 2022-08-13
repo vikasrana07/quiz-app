@@ -30,33 +30,34 @@ export class QuestionsController {
   }
 
   @Post()
-  async createUsers(@Body() data: QuestionsDTO) {
-    const user = await this.questionsService.create(data);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async createQuestion(@Body() body: QuestionsDTO) {
+    const data = await this.questionsService.create(body);
     return {
       statusCode: HttpStatus.OK,
-      message: 'User created successfully',
-      user
+      message: 'Question created successfully',
+      data
     };
   }
 
-  @Get(':id')
-  async readUser(@Param('id') id: number) {
+  /* @Get(':id')
+  async getQuestion(@Param('id') id: number) {
     const data = await this.questionsService.read(id);
     return {
       statusCode: HttpStatus.OK,
-      message: 'User fetched successfully',
+      message: 'Question fetched successfully',
       data,
     };
-  }
+  } */
 
-  /* @Patch(':id')
-  async uppdateUser(@Param('id') id: number, @Body() data: Partial<QuestionsDTO>) {
+  @Patch(':id')
+  async updateQuestion(@Param('id') id: number, @Body() data: Partial<QuestionsDTO>) {
     await this.questionsService.update(id, data);
     return {
       statusCode: HttpStatus.OK,
-      message: 'User updated successfully',
+      message: 'Question updated successfully',
     };
-  } */
+  }
 
   @Delete(':id')
   async deleteQuestion(@Param('id') id: number) {
