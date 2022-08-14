@@ -10,16 +10,6 @@ export class AuthService {
     private jwtTokenService: JwtService
   ) { }
 
-  async validateUserCredentials(username: string, password: string): Promise<any> {
-    const user = await this.usersService.findByUsername(username);
-
-    if (user && user.password === password) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
-  }
-
   async loginWithCredentials(body: any) {
 
     try {
@@ -38,6 +28,7 @@ export class AuthService {
         id: user.id,
         username: user.username,
         email: user.email,
+        role: user.role,
         firstName: user.firstName,
         lastName: user.lastName
       };

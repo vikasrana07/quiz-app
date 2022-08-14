@@ -35,7 +35,7 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException('User with this username does not exist', HttpStatus.NOT_FOUND);
+    throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
   }
 
   async findOne(key: string, value: string) {
@@ -43,7 +43,7 @@ export class UsersService {
     if (user) {
       return user;
     }
-    throw new HttpException('User with this username does not exist', HttpStatus.NOT_FOUND);
+    throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
   }
 
   /* async update(id: number, data: Partial<UsersDTO>) {

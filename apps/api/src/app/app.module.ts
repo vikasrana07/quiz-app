@@ -17,6 +17,7 @@ import { CategoriesEntity } from './categories/categories.entity';
 import { QuestionsEntity } from './questions/questions.entity';
 import { SettingsEntity } from './settings/settings.entity';
 import { UsersService } from './users/users.service';
+import { UtilService } from './common/services';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { UsersService } from './users/users.service';
     SettingsModule
   ],
   controllers: [AppController],
-  providers: [AppService, UsersService, JwtService],
+  providers: [AppService, UsersService, JwtService, UtilService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

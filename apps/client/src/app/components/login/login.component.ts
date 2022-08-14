@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CheckboxModule } from 'primeng/checkbox';
+import { User } from '../../_models';
 import { AlertService, AuthenticationService, LoaderService } from '../../_services';
 
 @Component({
@@ -47,9 +48,14 @@ export class LoginComponent implements OnInit {
     this.authenticationService.generateToken(this.formControls.username.value, this.formControls.password.value)
       //.pipe(first())
       .subscribe({
-        next: () => {
+        next: (response: User) => {
           this.loaderService.stop();
-          this.router.navigate(['/dashboard'])
+          if (response.role == 'admin') {
+            this.authenticationService.setUserData(response);
+            this.router.navigate(['/dashboard']);
+          } else {
+            this.alertService.error("Access Denied");
+          }
         },
         error: (error) => {
           this.loaderService.stop();

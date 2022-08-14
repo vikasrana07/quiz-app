@@ -51,11 +51,7 @@ export class AuthenticationService {
     };
 
     return this.httpService.post('auth/login', params)
-      .pipe(map((user: any) => {
-        this.setUserData(user);
-
-        localStorage.setItem('token', user['token']);
-        this.setToken(user['token']);
+      .pipe(map((user: User) => {
         return user;
       }));
   }
@@ -66,6 +62,10 @@ export class AuthenticationService {
     userData.userid = user.id;
     userData.name = user.firstName + " " + user.lastName;
     userData.username = user.username;
+
+    localStorage.setItem('token', user['token']);
+    this.setToken(user['token']);
+
     localStorage.setItem('user', JSON.stringify(userData));
     this.userSubject.next(userData);
     return userData;

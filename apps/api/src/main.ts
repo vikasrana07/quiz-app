@@ -4,6 +4,7 @@
  */
 
 import { Logger, ValidationPipe } from '@nestjs/common';
+import * as compression from 'compression';
 import { NestFactory } from '@nestjs/core';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app/app.module';
@@ -19,6 +20,7 @@ async function bootstrap() {
   );
   //app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix(globalPrefix);
+  app.use(compression());
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const port = process.env.PORT || 3333;

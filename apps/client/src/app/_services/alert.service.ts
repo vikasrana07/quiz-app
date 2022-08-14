@@ -18,7 +18,7 @@ export class AlertService {
   }
 
   error(response: any, title: string = 'Error'): void {
-    const message = response['message'];
+    const message = response['message'] || response;
     this.showMessage(title, message, 'error');
   }
 
