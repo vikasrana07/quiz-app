@@ -1,9 +1,22 @@
 import { Exclude } from 'class-transformer';
 import { Entity, Column } from 'typeorm';
 import { AbstractEntity } from '../common/entities/abstract.entity';
+import Role from '../roles/roles.enum';
 
 @Entity('users')
 export class UsersEntity extends AbstractEntity {
+
+  @Column({
+    type: 'varchar',
+    nullable: false
+  })
+  firstName: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: false
+  })
+  lastName: string;
 
   @Column({
     type: 'varchar',
@@ -19,17 +32,13 @@ export class UsersEntity extends AbstractEntity {
   })
   email: string;
 
-  @Column({
-    type: 'varchar',
-    nullable: false
-  })
-  firstName: string;
 
   @Column({
-    type: 'varchar',
-    nullable: false
+    type: 'enum',
+    enum: Role,
+    default: Role.User
   })
-  lastName: string;
+  public role: Role
 
   @Column()
   @Exclude()

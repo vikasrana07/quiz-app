@@ -10,19 +10,25 @@ import {
   UseInterceptors,
   HttpException,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
+  UseGuards
 } from '@nestjs/common';
 
 import * as bcrypt from 'bcrypt';
 
 import { UsersService } from './users.service';
 import { UsersDTO } from './users.dto';
+import { Roles } from '../roles/roles.decorator';
+import Role from '../roles/roles.enum';
+import { RolesGuard } from '../roles/roles.guard';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) { }
 
   @Get()
+  @Roles(Role.Admin)
+  @UseGuards(RolesGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllUsers() {
     const data = await this.usersService.showAll();
