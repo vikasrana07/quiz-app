@@ -1,17 +1,37 @@
 <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
   <div class="card p-fluid">
     <div class="field grid">
-      <label htmlfor="name" class="col-12 mb-2 md:col-2 md:mb-0">Name</label>
-      <div class="col-12 md:col-6"><input aria-label="Name" pInputText id="name" type="text"
-          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"></div>
-    </div>
-    <div class="field grid">
-      <label htmlfor="lastName" class="col-12 mb-2 md:col-2 md:mb-0">Category</label>
+      <label htmlfor="lastName" class="col-12 md:col-2">Category</label>
       <div class="col-12 md:col-6">
         <p-dropdown [options]="categories"
           [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.categoryId.errors }" appendTo="body"
           optionLabel="name" optionValue="id" [filter]="true" placeholder="Select Category"
           formControlName="categoryId">
+        </p-dropdown>
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="question" class="col-12 md:col-2">Question</label>
+      <div class="col-12 md:col-6"><input aria-label="Name" pInputText id="question" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.question.errors }" formControlName="question">
+      </div>
+    </div>
+    <div class="field grid" formArrayName="options"
+      *ngFor="let option of questionForm.get('options').controls; let i=index">
+      <label htmlfor="options" class="col-12 md:col-2">Option {{i+1}}</label>
+      <div class="col-12 md:col-6">
+        <ng-container [formGroupName]="i">
+          <input aria-label="Option" placeholder="" pInputText formControlName="name"
+            [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && options.controls[i].get('name')?.errors }">
+        </ng-container>
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="lastName" class="col-12 md:col-2">Answer</label>
+      <div class="col-12 md:col-6">
+        <p-dropdown [options]="answers" [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.answer.errors }"
+          appendTo="body" optionLabel="name" optionValue="id" [filter]="true" placeholder="Select Answer"
+          formControlName="answer">
         </p-dropdown>
       </div>
     </div>

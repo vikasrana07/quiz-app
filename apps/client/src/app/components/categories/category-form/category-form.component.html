@@ -1,7 +1,7 @@
 <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
   <div class="card p-fluid">
     <div class="field grid">
-      <label htmlfor="name" class="col-12 mb-2 md:col-2 md:mb-0">Name</label>
+      <label htmlfor="name" class="col-12 mb-2 md:col-2">Name</label>
       <div class="col-12 md:col-6"><input aria-label="Name" pInputText id="name" type="text"
           [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"></div>
     </div>

@@ -6,7 +6,13 @@ import { CategoriesEntity } from './../categories/categories.entity';
 export class QuestionsEntity extends AbstractEntity {
 
   @Column()
-  name: string;
+  question: string;
+
+  @Column()
+  options: string;
+
+  @Column()
+  answer: string;
 
   @ManyToOne(() => CategoriesEntity, (category: CategoriesEntity) => category.id)
   @JoinColumn()

@@ -1,4 +1,6 @@
 export interface QuestionsDTO {
     id: number;
-    name: string;
+    question: string;
+    options: string;
+    answer: string;
 }

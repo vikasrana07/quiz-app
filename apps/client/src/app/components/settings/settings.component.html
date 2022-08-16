@@ -1,17 +1,19 @@
 <form [formGroup]="settingForm" (ngSubmit)="onSubmit()">
     <div class="card p-fluid">
         <div class="field grid">
-            <label htmlfor="timePerQuestion" class="col-12 mb-2 md:col-2 md:mb-0">Time Per Question</label>
-            <div class="col-12 md:col-6"><input aria-label="Time Per Question" pInputText id="timePerQuestion"
-                    type="text"
-                    [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.timePerQuestion.errors }"
-                    formControlName="timePerQuestion"></div>
+            <label htmlfor="timePerQuestion" class="col-12 mb-3 md:col-3">Time Per Question (Seconds)</label>
+            <div class="col-12 md:col-6">
+                <p-inputNumber formControlName="timePerQuestion" [maxlength]="2" mode="decimal" [useGrouping]="false"
+                    [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.timePerQuestion.errors }">
+                </p-inputNumber>
+            </div>
         </div>
         <div class="field grid">
-            <label htmlfor="coinPerAnswer" class="col-12 mb-2 md:col-2 md:mb-0">Coin Per Answer</label>
-            <div class="col-12 md:col-6"><input aria-label="Coin Per Answer" pInputText id="coinPerAnswer" type="text"
-                    [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.coinPerAnswer.errors }"
-                    formControlName="coinPerAnswer">
+            <label htmlfor="coinPerAnswer" class="col-12 mb-3 md:col-3">Coin Per Answer</label>
+            <div class="col-12 md:col-6">
+                <p-inputNumber formControlName="coinPerAnswer" [maxlength]="3" mode="decimal" [useGrouping]="false"
+                    [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.coinPerAnswer.errors }">
+                </p-inputNumber>
             </div>
         </div>
     </div>

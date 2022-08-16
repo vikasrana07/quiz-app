@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 
 import { QuestionsService } from '../questions.service';
@@ -24,14 +24,16 @@ export class QuestionFormComponent implements OnInit {
   selectedRow: any;
   questionForm: FormGroup | any;;
   categories: any;
+  answers: any = [];
   constructor(
+    private fb: FormBuilder,
     private categoriesService: CategoriesService,
     private questionsService: QuestionsService,
     private loaderService: LoaderService,
     private alertService: AlertService,
     public ref: DynamicDialogRef,
     public config: DynamicDialogConfig
-  ) {
+    ,) {
     this.selectedRow = config.data;
     this.createQuestionForm();
   }
@@ -39,7 +41,20 @@ export class QuestionFormComponent implements OnInit {
   ngOnInit(): void {
     setTimeout(() => {
       this.getCategories();
+
+      this.addOption();
+      this.addOption();
+      this.addOption();
+      this.addOption();
+
+      this.questionForm.get('options').controls.forEach((element: any, index: number) => {
+        this.answers.push({
+          id: index,
+          name: "Option " + (index + 1)
+        });
+      });
     });
+
   }
   preSelect() {
     if (Object.keys(this.selectedRow).length) {
@@ -48,6 +63,21 @@ export class QuestionFormComponent implements OnInit {
         categoryId: this.selectedRow.categoryId
       });
     }
+  }
+  get options(): FormArray {
+    return this.questionForm.get("options") as FormArray;
+  }
+  newOption(): FormGroup {
+    return this.fb.group({
+      name: new FormControl('', [Validators.required]),
+    })
+  }
+
+  addOption() {
+    this.options.push(this.newOption());
+  }
+  removeOption(i: number) {
+    this.options.removeAt(i);
   }
   getCategories() {
     this.loaderService.start();
@@ -67,8 +97,10 @@ export class QuestionFormComponent implements OnInit {
   }
   createQuestionForm() {
     this.questionForm = new FormGroup({
-      name: new FormControl('', [Validators.required]),
-      categoryId: new FormControl('', [Validators.required])
+      question: new FormControl('', [Validators.required]),
+      categoryId: new FormControl('', [Validators.required]),
+      options: this.fb.array([]),
+      answer: new FormControl('', [Validators.required]),
     });
   }
   get formControls(): any { return this.questionForm.controls; }
@@ -78,11 +110,16 @@ export class QuestionFormComponent implements OnInit {
     if (this.questionForm.invalid) {
       return;
     }
-
     const data: any = {
-      "name": this.formControls.name.value,
+      "question": this.formControls.question.value,
       "category": this.formControls.categoryId.value
     }
+    const options: any = [];
+    this.formControls?.options?.value?.forEach((element: any) => {
+      options.push(element.name);
+    });
+    data.answer = options[this.formControls.answer.value];
+    data.options = options.join(",");
     if (Object.keys(this.selectedRow).length) {
       this.updateQuestion(data);
     } else {

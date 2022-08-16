@@ -6,11 +6,14 @@ import { AlertService, LoaderService } from '../../_services';
 import { SettingsService } from './settings.service';
 import { Setting } from '../../_models';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+
+
 @Component({
   selector: 'quiz-app-settings',
   templateUrl: './settings.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputTextModule],
+  imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputTextModule, InputNumberModule],
   providers: [SettingsService]
 })
 export class SettingsComponent implements OnInit {
