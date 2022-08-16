@@ -27,7 +27,7 @@ export const APP_ROUTES: Routes = [
     path: 'questions',
     loadComponent: () => import('./components/questions/questions.component').then(m => m.QuestionsComponent),
     canActivate: [AuthGuard],
-    title: 'Categories'
+    title: 'Questions'
   },
   {
     path: 'users',

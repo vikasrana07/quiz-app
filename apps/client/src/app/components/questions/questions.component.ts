@@ -6,7 +6,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { first } from 'rxjs';
 import { XTableComponent } from '../../shared/components/x-table/x-table.component';
 import { ThreeDotMenuComponent } from '../../shared/three-dot-menu/three-dot-menu.component';
-import { Category, Question } from '../../_models';
+import { Question } from '../../_models';
 import { AlertService, DynamicDialogService, LoaderService } from '../../_services';
 import { QuestionFormComponent } from './question-form/question-form.component';
 import { QuestionsService } from './questions.service';
@@ -20,7 +20,7 @@ import { QuestionsService } from './questions.service';
 })
 export class QuestionsComponent implements OnInit {
   cols: any;
-  rows!: Array<Category>;
+  rows!: Array<Question>;
   selectedRow!: Question;
   items!: MenuItem[];
   constructor(
@@ -34,7 +34,7 @@ export class QuestionsComponent implements OnInit {
   ngOnInit(): void {
     this.cols = [
       { field: 'id', header: 'ID' },
-      { field: 'name', header: 'Name' },
+      { field: 'question', header: 'Question' },
       { field: 'categoryName', header: 'Category' },
       { field: 'action', header: 'Action', sort: false, filter: false }
     ];
@@ -75,7 +75,7 @@ export class QuestionsComponent implements OnInit {
     return false;
   }
 
-  delete(row: Category) {
+  delete(row: Question) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete the question?',
       accept: () => {
@@ -106,7 +106,7 @@ export class QuestionsComponent implements OnInit {
       }
     });
   }
-  update(row: Category) {
+  update(row: Question) {
     const ref = this.dynamicDialogService.showInformationDialog(QuestionFormComponent, 'Edit Question', row, { width: '60%', height: '100%' });
     ref.onClose.subscribe((data) => {
       if (data) {
