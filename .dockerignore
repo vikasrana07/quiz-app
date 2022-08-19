@@ -1,0 +1,6 @@
+.vscode/
+.git/
+.angular/
+dist/
+coverage/
+node_modules/
