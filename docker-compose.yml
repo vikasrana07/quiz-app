@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_DATABASE=quiz_app
+      - MYSQL_USER=quiz_user
+      - MYSQL_PASSWORD=ATS_.E0)pqNfi!(G
+      - MYSQL_PORT=3306
+    ports:
+      - 3333:3333
+    volumes:
+      - web-data:/app
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    hostname: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_DATABASE=quiz_app
+      - MYSQL_USER=quiz_user
+      - MYSQL_PASSWORD=ATS_.E0)pqNfi!(G
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1
+  admin:
+    image: adminer
+    ports:
+      - '8080:8080'
+volumes:
+  web-data:
+  mysql-data:

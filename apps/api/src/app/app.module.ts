@@ -1,6 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { JwtService } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,25 +21,34 @@ import { SettingsEntity } from './settings/settings.entity';
 import { UsersService } from './users/users.service';
 import { UtilService } from './common/services';
 
+const ormConfig: TypeOrmModuleOptions = {
+  type: 'mysql',
+  host: process.env.MYSQL_HOST,
+  port: +process.env.MYSQL_PORT,
+  username: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  entities: [
+    CategoriesEntity,
+    QuestionsEntity,
+    UsersEntity,
+    SettingsEntity
+  ],
+  synchronize: true,
+}
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: '',
-      database: 'quiz_app',
-      entities: [
-        CategoriesEntity,
-        QuestionsEntity,
-        UsersEntity,
-        SettingsEntity
-      ],
-      // entities: ['../typeorm/entities/*.ts'],
-      synchronize: true,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'client'),
+      serveStaticOptions: {
+        cacheControl: true,
+        maxAge: 604800
+      },
+      exclude: ['/api*']
     }),
+    TypeOrmModule.forRoot(ormConfig),
     TypeOrmModule.forFeature([UsersEntity]),
+    ConfigModule.forRoot(),
     AuthModule,
     CategoriesModule,
     QuestionsModule,
