@@ -22,8 +22,8 @@ import {
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsSize: 20,
-  pbColor: "#1e8a95",
-  fgsColor: "#1e8a95",
+  pbColor: "#3B82F6",
+  fgsColor: "#3B82F6",
   bgsType: SPINNER.rectangleBounce,
   fgsType: SPINNER.threeStrings,
   pbDirection: PB_DIRECTION.leftToRight,

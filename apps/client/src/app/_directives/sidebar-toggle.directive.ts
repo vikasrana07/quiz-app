@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostBinding, HostListener, Renderer2 } from '@angular/core';
+import { Directive, HostBinding, HostListener, Renderer2 } from '@angular/core';
 
 @Directive({
     // eslint-disable-next-line @angular-eslint/directive-selector
@@ -7,7 +7,6 @@ import { Directive, ElementRef, HostBinding, HostListener, Renderer2 } from '@an
 export class SidebarToggleDirective {
     @HostBinding('class.layout-static-inactive') isClosed = true;
     constructor(
-        private elRef: ElementRef,
         private renderer: Renderer2
     ) { }
     @HostListener('click', ['$event']) toggleOpen() {

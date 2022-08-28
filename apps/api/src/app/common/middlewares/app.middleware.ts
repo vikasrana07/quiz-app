@@ -1,13 +1,13 @@
 import { HttpException, HttpStatus, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstants } from '../constants';
-import { UsersService } from '../../users/users.service';
 import { UtilService } from '../services';
+import { UsersService } from '../../users/users.service';
 @Injectable()
 export class AppMiddleware implements NestMiddleware {
   constructor(
+    private configService: ConfigService,
     private usersService: UsersService,
     private utilService: UtilService,
     private jwtService: JwtService
@@ -24,7 +24,7 @@ export class AppMiddleware implements NestMiddleware {
   }
 
   async isTokenValid(bearerToken: string): Promise<boolean> {
-    const verifyOptions = { secret: jwtConstants.secret };
+    const verifyOptions = { secret: this.configService.get('JWT_SECRET') };
     let isValid = false;
     try {
       const payload = await this.jwtService.verifyAsync(bearerToken, verifyOptions);

@@ -8,11 +8,13 @@ body {
   font-family: var(--font-family);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 *:focus {
   outline: none;
   box-shadow: var(--primary-color) !important;
 }
+
 a {
   text-decoration: none;
 }
@@ -35,7 +37,7 @@ a {
 }
 
 .layout-sidebar .app-logo {
-  padding: 2.5rem 0 2rem;
+  padding: 1.8rem 0 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -861,6 +863,10 @@ a {
   margin-bottom: 0;
 }
 x-table .p-datatable .p-datatable-header {
-  background: none;
-  border: none;
+  background: var(--surface-ground);
+  border: 1px solid #e2e8f0;
+}
+x-table .p-datatable .p-datatable-thead > tr > th,
+x-table .p-datatable .p-datatable-tbody > tr > td {
+  border: 1px solid #e2e8f0;
 }

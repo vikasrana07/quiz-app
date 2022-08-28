@@ -10,16 +10,19 @@ import { AppService } from './app.service';
 import { AppMiddleware } from './common/middlewares/app.middleware';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { RolesModule } from './roles/roles.module';
 import { CategoriesModule } from './categories/categories.module';
 import { QuestionsModule } from './questions/questions.module';
 
 import { SettingsModule } from './settings/settings.module';
-import { UsersEntity } from './users/users.entity';
+/* import { UsersEntity } from './users/users.entity';
 import { CategoriesEntity } from './categories/categories.entity';
 import { QuestionsEntity } from './questions/questions.entity';
-import { SettingsEntity } from './settings/settings.entity';
+import { SettingsEntity } from './settings/settings.entity'; */
 import { UsersService } from './users/users.service';
 import { UtilService } from './common/services';
+import { User } from './users/entities/user.entity';
+import { Role } from './roles/entities/role.entity';
 
 const ormConfig: TypeOrmModuleOptions = {
   type: 'mysql',
@@ -28,13 +31,15 @@ const ormConfig: TypeOrmModuleOptions = {
   username: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  entities: [
-    CategoriesEntity,
-    QuestionsEntity,
-    UsersEntity,
-    SettingsEntity
-  ],
-  synchronize: true,
+  /*  entities: [
+     CategoriesEntity,
+     QuestionsEntity,
+     UsersEntity,
+     SettingsEntity
+   ], */
+  entities: [],
+  autoLoadEntities: true,
+  synchronize: true
 }
 @Module({
   imports: [
@@ -47,12 +52,13 @@ const ormConfig: TypeOrmModuleOptions = {
       exclude: ['/api*']
     }),
     TypeOrmModule.forRoot(ormConfig),
-    TypeOrmModule.forFeature([UsersEntity]),
+    TypeOrmModule.forFeature([User, Role]),
     ConfigModule.forRoot(),
     AuthModule,
     CategoriesModule,
     QuestionsModule,
     UsersModule,
+    RolesModule,
     SettingsModule
   ],
   controllers: [AppController],
@@ -63,7 +69,8 @@ export class AppModule implements NestModule {
     consumer
       .apply(AppMiddleware)
       .exclude(
-        { path: 'api/auth/login', method: RequestMethod.POST }
+        { path: 'api/auth/generatetoken', method: RequestMethod.POST },
+        { path: 'api/auth/validateToken', method: RequestMethod.GET }
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });
   }

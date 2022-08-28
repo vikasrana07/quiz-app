@@ -9,16 +9,22 @@ import {
   HttpStatus,
   ClassSerializerInterceptor,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 
 import { CategoriesService } from './categories.service';
-import { CategoriesDTO } from './categories.dto';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { Resource } from '../auth/decorators/resource.decorator';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { ResourceGuard } from '../auth/guards/resource.guards';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private categoriesService: CategoriesService) { }
 
   @Get()
+  @Resource('list_category')
+  @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllCategories() {
     const data = await this.categoriesService.showAll();
@@ -30,7 +36,9 @@ export class CategoriesController {
   }
 
   @Post()
-  async createCategory(@Body() body: CategoriesDTO) {
+  @Resource('create_category')
+  @UseGuards(JwtGuard, ResourceGuard)
+  async createCategory(@Body() body: CreateCategoryDto) {
     const data = await this.categoriesService.create(body);
     return {
       statusCode: HttpStatus.OK,
@@ -40,7 +48,9 @@ export class CategoriesController {
   }
 
   @Patch(':id')
-  async updateCategory(@Param('id') id: number, @Body() data: Partial<CategoriesDTO>) {
+  @Resource('update_category')
+  @UseGuards(JwtGuard, ResourceGuard)
+  async updateCategory(@Param('id') id: number, @Body() data: Partial<CreateCategoryDto>) {
     await this.categoriesService.update(id, data);
     return {
       statusCode: HttpStatus.OK,
@@ -49,6 +59,8 @@ export class CategoriesController {
   }
 
   @Delete(':id')
+  @Resource('delete_category')
+  @UseGuards(JwtGuard, ResourceGuard)
   async deleteCategory(@Param('id') id: number) {
     await this.categoriesService.delete(id);
     return {

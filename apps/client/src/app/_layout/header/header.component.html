@@ -20,8 +20,43 @@
                 </span>
             </li> -->
             <li class="topbar-profile">
-                <button type="button" class="p-link"><img src="assets/images/avatar.png" alt="Profile"></button>
+                <p-avatar (click)="toggleSidebar()" styleClass="cursor-pointer text-primary" icon=" pi pi-user"
+                    shape="circle">
+                </p-avatar>
             </li>
         </ul>
     </div>
 </div>
+<p-sidebar [(visible)]="displaySidebar" position="right">
+    <div class="flex flex-column mx-auto md:mx-0md:col-4">
+        <span class="text-color-secondary font-medium mb-5">{{ user.name }}</span>
+        <ul class="list-none m-0 p-0">
+            <li>
+                <a
+                    class="cursor-pointer flex surface-border mb-3 p-3 align-items-center border-1 surface-border border-round hover:surface-hover transition-colors transition-duration-150">
+                    <span class="flex align-items-center"><i class="pi pi-user text-xl text-primary"></i></span>
+                    <div class="ml-3">
+                        <span class="mb-2 font-semibold">Profile</span>
+                    </div>
+                </a>
+            </li>
+
+            <li>
+                <a (click)="navigateTo('settings')"
+                    class="cursor-pointer flex surface-border mb-3 p-3 align-items-center border-1 surface-border border-round hover:surface-hover transition-colors transition-duration-150">
+                    <span class="flex align-items-center"><i class="pi pi-cog text-xl text-primary"></i></span>
+                    <div class="ml-3">
+                        <span class="mb-2 font-semibold">Settings</span>
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a (click)="logout()"
+                    class="cursor-pointer flex surface-border mb-3 p-3 align-items-center border-1 surface-border border-round hover:surface-hover transition-colors transition-duration-150">
+                    <span class="flex align-items-center"><i class="pi pi-power-off text-xl text-primary"></i></span>
+                    <div class="ml-3"><span class="font-semibold">Log Out</span></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</p-sidebar>

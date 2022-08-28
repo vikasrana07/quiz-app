@@ -2,12 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem } from 'primeng/api';
 import { ContextMenuModule } from 'primeng/contextmenu';
-import { DialogService } from 'primeng/dynamicdialog';
+import { SidebarModule } from 'primeng/sidebar';
+
 import { first } from 'rxjs';
 import { XTableComponent } from '../../shared/components/x-table/x-table.component';
 import { ThreeDotMenuComponent } from '../../shared/three-dot-menu/three-dot-menu.component';
+import { HasPermissionDirective } from '../../_directives';
 import { Category, User } from '../../_models';
-import { AlertService, DynamicDialogService, LoaderService } from '../../_services';
+import { AlertService, LoaderService, PermissionService } from '../../_services';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UsersService } from './users.service';
 
@@ -15,19 +17,21 @@ import { UsersService } from './users.service';
   selector: 'quiz-app-users',
   templateUrl: './users.component.html',
   standalone: true,
-  imports: [XTableComponent, ThreeDotMenuComponent, CommonModule, ContextMenuModule],
-  providers: [UsersService, AlertService, LoaderService, DialogService, DynamicDialogService]
+  imports: [HasPermissionDirective, UserFormComponent, XTableComponent, ThreeDotMenuComponent, CommonModule, ContextMenuModule, SidebarModule],
+  providers: [UsersService, AlertService, LoaderService]
 })
 export class UsersComponent implements OnInit {
   cols: any;
   rows!: Array<Category>;
   selectedRow!: User;
   items!: MenuItem[];
+  displaySidebar!: boolean;
+  action = "add";
   constructor(
+    private permissionService: PermissionService,
     private confirmationService: ConfirmationService,
     private alertService: AlertService,
     private loaderService: LoaderService,
-    private dynamicDialogService: DynamicDialogService,
     private usersService: UsersService
   ) { }
 
@@ -44,8 +48,12 @@ export class UsersComponent implements OnInit {
   }
   prepareMenu() {
     this.items = [];
-    this.items.push({ label: 'Edit User', icon: 'pi pi-pencil', command: () => { this.update(this.selectedRow); } });
-    this.items.push({ label: 'Delete User', icon: 'pi pi-times', command: () => { this.delete(this.selectedRow); } });
+    if (this.permissionService.hasPermission(["update_user"])) {
+      this.items.push({ label: 'Edit User', icon: 'pi pi-pencil', command: () => { this.action = "edit"; this.displaySidebar = true; } });
+    }
+    if (this.permissionService.hasPermission(["delete_user"])) {
+      this.items.push({ label: 'Delete User', icon: 'pi pi-times', command: () => { this.delete(this.selectedRow); } });
+    }
   }
   getUsers() {
     this.loaderService.start();
@@ -54,7 +62,7 @@ export class UsersComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (response: any) => {
-          this.rows = response.data;
+          this.rows = response;
           this.loaderService.stop();
         },
         error: (error: any) => {
@@ -94,24 +102,20 @@ export class UsersComponent implements OnInit {
       }
     });
   }
-  add() {
-    const ref = this.dynamicDialogService.showInformationDialog(UserFormComponent, 'Add New User', {}, { width: '60%', height: '100%' });
-    ref.onClose.subscribe((data) => {
-      if (data) {
-        this.rows.push(data);
-        this.rows = [...this.rows];
-      }
-    });
+  onAdd() {
+    this.action = "add";
+    this.displaySidebar = true;
   }
-  update(row: User) {
-    const ref = this.dynamicDialogService.showInformationDialog(UserFormComponent, 'Edit User', row, { width: '60%', height: '100%' });
-    ref.onClose.subscribe((data) => {
-      if (data) {
-        const index = this.rows.findIndex((x: any) => x.id === data.id);
-        if (index != -1) {
-          this.rows[index] = data;
-        }
+  onAddUpdate(data: any) {
+    if (data.action === "add") {
+      this.rows.push(data);
+      this.rows = [...this.rows];
+    } else {
+      const index = this.rows.findIndex((x: any) => x.id === data.id);
+      if (index != -1) {
+        this.rows[index] = data;
       }
-    });
+    }
+    this.displaySidebar = false;
   }
 }

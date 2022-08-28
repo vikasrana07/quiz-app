@@ -1,0 +1,30 @@
+<span class="text-color-secondary font-medium">{{action === 'add' ? 'Add':'Edit'}} Role</span>
+<form class="mt-2" [formGroup]="roleForm" (ngSubmit)="onSubmit()" autocomplete="off">
+  <div class="card p-fluid">
+    <div class="field grid">
+      <label htmlfor="name" class="col-12 mb-2 md:col-4 md:mb-0">Role Name</label>
+      <div class="col-12 md:col-8"><input aria-label="Role Name" pInputText id="name" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name">
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="lastName" class="col-12 mb-2 md:col-4 md:mb-0">Permissions</label>
+      <div class="col-12 md:col-8">
+        <div formArrayName="resources" *ngFor="let option of roleForm.get('resources').controls; let i=index">
+          <ng-container [formGroupName]="i">
+            <p-checkbox [binary]="true" class="flex align-items-center mt-1" [value]="option.value.name"
+              [label]="option.value.label" formControlName="isSelected"
+              [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && resources.controls[i].get('isSelected')?.errors }">
+            </p-checkbox>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="mt-5"></div>
+  <div class="flex justify-content-end">
+    <!--  <button type="button" pButton class="mr-2" (click)="closeDialog()">Close</button> -->
+    <button type="submit" pButton>Save</button>
+  </div>
+</form>

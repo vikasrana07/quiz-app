@@ -1,19 +1,16 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertService, AuthenticationService, LoaderService } from '../../_services';
 
 @Component({
   selector: 'quiz-app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  isSideMenuOpen = true;
+  displaySidebar = false;
   user: any;
   constructor(
-    private el: ElementRef,
-    private renderer: Renderer2,
     private router: Router,
     private loaderService: LoaderService,
     private alertService: AlertService,
@@ -39,5 +36,12 @@ export class HeaderComponent implements OnInit {
           this.alertService.error(error);
         }
       });
+  }
+  navigateTo(url: string) {
+    this.displaySidebar = false;
+    this.router.navigate(['/' + url]);
+  }
+  toggleSidebar() {
+    this.displaySidebar = !this.displaySidebar;
   }
 }

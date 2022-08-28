@@ -8,7 +8,7 @@ import * as compression from 'compression';
 import { NestFactory } from '@nestjs/core';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app/app.module';
-import { HttpExceptionFilter } from './app/common/filters/http-exception.filter';
+//import { HttpExceptionFilter } from './app/common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +21,7 @@ async function bootstrap() {
   //app.useGlobalFilters(new HttpExceptionFilter());
   app.setGlobalPrefix(globalPrefix);
   app.use(compression());
+  app.enableCors();
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   const port = process.env.PORT || 3333;

@@ -4,8 +4,8 @@
         [templates]="[{type:'body',template:bodyTemplate}]">
     </x-table>
     <ng-template #captionButtonTemplate>
-        <button type="button" class="p-button p-button-icon-only p-button-rounded" pTooltip="Add New User"
-            (click)="add()" tooltipPosition="top">
+        <button type="button" *hasPermission="['create_user']" class="p-button p-button-icon-only p-button-rounded"
+            pTooltip="Add New User" (click)="onAdd()" tooltipPosition="top">
             <i class="pi pi-plus"></i>
         </button>
     </ng-template>
@@ -19,3 +19,7 @@
         </tr>
     </ng-template>
 </div>
+<p-sidebar [style]="{width:'50%'}" [(visible)]="displaySidebar" *ngIf="displaySidebar" position="right">
+    <quiz-app-user-form [action]="action" (onAddUpdate)="onAddUpdate($event)" [selectedRow]="selectedRow">
+    </quiz-app-user-form>
+</p-sidebar>

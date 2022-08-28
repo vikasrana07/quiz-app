@@ -1,6 +1,5 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import { Component, OnInit } from '@angular/core';
-import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -10,51 +9,67 @@ import { AlertService, LoaderService } from '../../../_services';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
+import { DividerModule } from 'primeng/divider';
+import { User } from '../../../_models';
 
 @Component({
   selector: 'quiz-app-user-form',
   templateUrl: './user-form.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, DropdownModule, InputTextModule, CommonModule]
+  imports: [
+    ReactiveFormsModule,
+    ButtonModule,
+    DropdownModule,
+    InputTextModule,
+    PasswordModule,
+    DividerModule,
+    CommonModule
+  ]
 })
 export class UserFormComponent implements OnInit {
   isSubmitted!: boolean;
-  selectedRow: any;
   userForm: FormGroup | any;;
   categories: any;
+  @Input() action!: string;
+  @Input() selectedRow!: User;
+  @Output() onAddUpdate: EventEmitter<any> = new EventEmitter();
   constructor(
     private usersService: UsersService,
     private loaderService: LoaderService,
     private alertService: AlertService,
-    public ref: DynamicDialogRef,
-    public config: DynamicDialogConfig
   ) {
-    this.selectedRow = config.data;
-    this.createuserForm();
+
   }
 
   ngOnInit(): void {
-    this.preSelect();
-  }
-  preSelect() {
-    if (Object.keys(this.selectedRow).length) {
-      this.userForm.patchValue({
-        firstName: this.selectedRow.firstName,
-        lastName: this.selectedRow.lastName,
-        username: this.selectedRow.username,
-        email: this.selectedRow.email,
-      });
+    this.createUserForm();
+    if (this.action == 'edit') {
+      this.preSelect();
     }
   }
+  preSelect() {
+    this.userForm.patchValue({
+      firstName: this.selectedRow.firstName,
+      lastName: this.selectedRow.lastName,
+      username: this.selectedRow.username,
+      email: this.selectedRow.email,
+    });
+  }
 
-  createuserForm() {
-    this.userForm = new FormGroup({
+  createUserForm() {
+    const formObj: any = {
       firstName: new FormControl('', [Validators.required]),
       lastName: new FormControl('', [Validators.required]),
       username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required]),
-      password: new FormControl('')
-    });
+      email: new FormControl('', [Validators.required, Validators.email]),
+    };
+    if (this.action == 'add') {
+      formObj.password = new FormControl('', [Validators.required])
+    } else {
+      formObj.password = new FormControl('')
+    }
+    this.userForm = new FormGroup(formObj);
   }
   get formControls(): any { return this.userForm.controls; }
 
@@ -70,10 +85,11 @@ export class UserFormComponent implements OnInit {
       "username": this.formControls.username.value,
       "email": this.formControls.email.value
     }
-    if (Object.keys(this.selectedRow).length) {
-      this.updateUser(data);
-    } else {
+    if (this.action == 'add') {
+      data.password = this.formControls.password.value;
       this.createUser(data);
+    } else {
+      this.updateUser(data);
     }
   }
   createUser(data: any) {
@@ -84,11 +100,13 @@ export class UserFormComponent implements OnInit {
         next: (response: any) => {
           this.loaderService.stop();
           this.alertService.success(response["message"]);
-          const category = this.categories.find((item: any) => item.id == data.category);
+          const dataToEmit = response;
+          dataToEmit.action = this.action;
+          this.onAddUpdate.emit(dataToEmit);
+          /* const category = this.categories.find((item: any) => item.id == data.category);
           data.id = response?.data?.id;
           data.categoryId = category.id;
-          data.categoryName = category.name;
-          this.closeDialog(data);
+          data.categoryName = category.name; */
         },
         error: (error: any) => {
           this.loaderService.stop();
@@ -104,19 +122,14 @@ export class UserFormComponent implements OnInit {
         next: (response: any) => {
           this.loaderService.stop();
           this.alertService.success(response["message"]);
-          const category = this.categories.find((item: any) => item.id == data.category);
-          data.id = this.selectedRow.id;
-          data.categoryId = category.id;
-          data.categoryName = category.name;
-          this.closeDialog(data);
+          const dataToEmit = response;
+          dataToEmit.action = this.action;
+          this.onAddUpdate.emit(dataToEmit);
         },
         error: (error: any) => {
           this.loaderService.stop();
           this.alertService.error(error);
         }
       });
-  }
-  closeDialog(data?: any) {
-    this.ref.close(data);
   }
 }

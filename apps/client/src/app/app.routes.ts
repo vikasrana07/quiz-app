@@ -36,6 +36,12 @@ export const APP_ROUTES: Routes = [
     title: 'Users'
   },
   {
+    path: 'roles',
+    loadComponent: () => import('./components/roles/roles.component').then(m => m.RolesComponent),
+    canActivate: [AuthGuard],
+    title: 'Roles'
+  },
+  {
     path: 'settings',
     loadComponent: () => import('./components/settings/settings.component').then(m => m.SettingsComponent),
     canActivate: [AuthGuard],

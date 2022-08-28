@@ -8,17 +8,24 @@ import {
   Param,
   HttpStatus,
   ClassSerializerInterceptor,
-  UseInterceptors
+  UseInterceptors,
+  UseGuards
 } from '@nestjs/common';
 
 import { QuestionsService } from './questions.service';
-import { QuestionsDTO } from './questions.dto';
+import { CreateQuestionDto } from './dto/create-question.dto';
+import { UpdateQuestionDto } from './dto/update-question.dto';
+import { Resource } from '../auth/decorators/resource.decorator';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { ResourceGuard } from '../auth/guards/resource.guards';
 
 @Controller('questions')
 export class QuestionsController {
   constructor(private questionsService: QuestionsService) { }
 
   @Get()
+  @Resource('list_question')
+  @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllQuestions() {
     const data = await this.questionsService.showAll();
@@ -30,8 +37,10 @@ export class QuestionsController {
   }
 
   @Post()
+  @Resource('create_question')
+  @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createQuestion(@Body() body: QuestionsDTO) {
+  async createQuestion(@Body() body: CreateQuestionDto) {
     const data = await this.questionsService.create(body);
     return {
       statusCode: HttpStatus.OK,
@@ -51,7 +60,9 @@ export class QuestionsController {
   } */
 
   @Patch(':id')
-  async updateQuestion(@Param('id') id: number, @Body() data: Partial<QuestionsDTO>) {
+  @Resource('update_question')
+  @UseGuards(JwtGuard, ResourceGuard)
+  async updateQuestion(@Param('id') id: number, @Body() data: Partial<UpdateQuestionDto>) {
     await this.questionsService.update(id, data);
     return {
       statusCode: HttpStatus.OK,
@@ -60,6 +71,8 @@ export class QuestionsController {
   }
 
   @Delete(':id')
+  @Resource('delete_question')
+  @UseGuards(JwtGuard, ResourceGuard)
   async deleteQuestion(@Param('id') id: number) {
     await this.questionsService.delete(id);
     return {

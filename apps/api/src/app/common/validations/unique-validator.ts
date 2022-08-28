@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import {
-    registerDecorator,
     ValidationArguments,
     ValidationOptions,
     ValidatorConstraint,
@@ -23,12 +22,5 @@ export function UniqueValidator(entity: Function, validationOptions?: Validation
     return function (object: Object, propertyName: string) {
         console.log(entity)
         object[`class_entity_${propertyName}`] = entity;
-        /* registerDecorator({
-            target: object.constructor,
-            propertyName: propertyName,
-            options: validationOptions,
-            constraints: [],
-            validator: UniqueOnDatabaseExistConstraint,
-        }); */
     };
 }

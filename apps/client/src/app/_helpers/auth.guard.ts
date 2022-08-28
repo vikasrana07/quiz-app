@@ -29,14 +29,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   }
   validateUser(route: ActivatedRouteSnapshot, url: any): boolean {
     if (this.authService.isLoggedIn()) {
-      if (route.data['permission']) {
+      /* if (route.data['permission']) {
         if (this.permissionService.hasPermission(route.data['permission'])) {
           return true;
         } else {
           this.router.navigate(['/dashboard']);
           return false;
         }
-      }
+      } */
       return true;
     }
     this.router.navigate(['/login'], { queryParams: { 'returnUrl': url } });

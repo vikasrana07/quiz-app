@@ -38,7 +38,7 @@ export class SidebarComponent implements OnInit {
               {
                 name: 'List',
                 href: ['/categories'],
-                icon: 'pi-image',
+                icon: 'pi-list',
               }
             ]
           },
@@ -49,7 +49,7 @@ export class SidebarComponent implements OnInit {
               {
                 name: 'List',
                 href: ['/questions'],
-                icon: 'pi-image',
+                icon: 'pi-list',
               }
             ]
           }
@@ -61,13 +61,12 @@ export class SidebarComponent implements OnInit {
           {
             name: 'Users',
             icon: 'pi-users',
-            submenu: [
-              {
-                name: 'List',
-                href: ['/users'],
-                icon: 'pi-image',
-              }
-            ]
+            href: ['/users']
+          },
+          {
+            name: 'Roles',
+            icon: 'pi-shield',
+            href: ['/roles']
           }
         ]
       },

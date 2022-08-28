@@ -50,7 +50,16 @@ export class AuthenticationService {
       password: password
     };
 
-    return this.httpService.post('auth/login', params)
+    return this.httpService.post('auth/generatetoken', params)
+      .pipe(map((user: User) => {
+        localStorage.setItem('token', user['token']);
+        this.setToken(user['token']);
+        return user;
+      }));
+  }
+
+  validateToken(): Observable<User> {
+    return this.httpService.get('auth/validatetoken')
       .pipe(map((user: User) => {
         return user;
       }));
@@ -62,10 +71,7 @@ export class AuthenticationService {
     userData.userid = user.id;
     userData.name = user.firstName + " " + user.lastName;
     userData.username = user.username;
-
-    localStorage.setItem('token', user['token']);
-    this.setToken(user['token']);
-
+    userData.permissions = user.permissions;
     localStorage.setItem('user', JSON.stringify(userData));
     this.userSubject.next(userData);
     return userData;
