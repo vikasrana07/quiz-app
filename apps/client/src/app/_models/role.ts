@@ -1,5 +1,5 @@
 export class Role {
-    id!: number;
-    name!: string;
-    resources!: string[];
+  id!: number;
+  name!: string;
+  resources!: string[];
 }

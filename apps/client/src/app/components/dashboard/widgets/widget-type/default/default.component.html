@@ -1,0 +1,27 @@
+<div [class]="widget.class">
+  <div><span class="font-semibold text-lg">{{widget.name}}</span>
+    <div class="flex justify-content-between align-items-start mt-3">
+      <div class="w-6"><span class="text-4xl font-bold text-900">{{widget.total}}</span>
+        <div class="text-green-500"><span class="font-medium">+12%</span><i class="pi pi-arrow-up text-xs ml-2"></i>
+        </div>
+      </div>
+      <div class="w-6"></div>
+    </div>
+  </div>
+  <!-- <div class="">
+    <span class="widget-title">
+      {{widget?.total || 0}} {{widget?.label}}
+    </span>
+    <span class="widget-title">
+      {{widget?.total || 0}} {{widget?.label}}
+    </span>
+    <table class="w-100 mt-2">
+      <ng-container *ngFor="let item of widget?.response?.data;">
+        <tr>
+          <td class="widget-item-count"><span *ngIf="item.status">{{item.value || 0}}</span> </td>
+          <td class="widget-item-label"><span *ngIf="item.status">{{item.status}}</span></td>
+        </tr>
+      </ng-container>
+    </table>
+  </div> -->
+</div>

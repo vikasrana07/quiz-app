@@ -29,29 +29,25 @@
     <div class="field grid">
       <label htmlfor="password" class="col-12 mb-2 md:col-4 md:mb-0">Password</label>
       <div class="col-12 md:col-8">
-        <p-password formControlName="password" value="" autocomplete="new-password">
-          <ng-template pTemplate="header">
-            <h6>Pick a password</h6>
-          </ng-template>
-          <ng-template pTemplate="footer">
-            <p-divider></p-divider>
-            <p class="mt-2">Suggestions</p>
-            <ul class="pl-2 ml-2 mt-0">
-              <li>At least one lowercase</li>
-              <li>At least one uppercase</li>
-              <li>At least one numeric</li>
-              <li>Minimum 8 characters</li>
-            </ul>
-          </ng-template>
-        </p-password>
-        <!-- <input aria-label="Password" pPassword id="password" type="password"
-          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.password.errors }" formControlName="password"> -->
+        <p-password formControlName="password" value="" autocomplete="new-password"></p-password>
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="email" class="col-12 mb-2 md:col-4 md:mb-0">Roles</label>
+      <div class="col-12 md:col-8">
+        <div formArrayName="roles" *ngFor="let option of userForm.get('roles').controls; let i=index">
+          <ng-container [formGroupName]="i">
+            <p-checkbox [binary]="true" class="flex align-items-center mt-1" [value]="option.value.id"
+              [label]="option.value.label" formControlName="isSelected"
+              [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && roles.controls[i].get('isSelected')?.errors }">
+            </p-checkbox>
+          </ng-container>
+        </div>
       </div>
     </div>
   </div>
   <div class="mt-5"></div>
   <div class="flex justify-content-end">
-    <!--  <button type="button" pButton class="mr-2" (click)="closeDialog()">Close</button> -->
     <button type="submit" pButton>Save</button>
   </div>
 </form>

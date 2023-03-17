@@ -8,8 +8,12 @@ import { first } from 'rxjs';
 import { XTableComponent } from '../../shared/components/x-table/x-table.component';
 import { ThreeDotMenuComponent } from '../../shared/three-dot-menu/three-dot-menu.component';
 import { HasPermissionDirective } from '../../_directives';
-import { Category, User } from '../../_models';
-import { AlertService, LoaderService, PermissionService } from '../../_services';
+import { Category, Role, User } from '../../_models';
+import {
+  AlertService,
+  LoaderService,
+  PermissionService,
+} from '../../_services';
 import { UserFormComponent } from './user-form/user-form.component';
 import { UsersService } from './users.service';
 
@@ -17,8 +21,16 @@ import { UsersService } from './users.service';
   selector: 'quiz-app-users',
   templateUrl: './users.component.html',
   standalone: true,
-  imports: [HasPermissionDirective, UserFormComponent, XTableComponent, ThreeDotMenuComponent, CommonModule, ContextMenuModule, SidebarModule],
-  providers: [UsersService, AlertService, LoaderService]
+  imports: [
+    HasPermissionDirective,
+    UserFormComponent,
+    XTableComponent,
+    ThreeDotMenuComponent,
+    CommonModule,
+    ContextMenuModule,
+    SidebarModule,
+  ],
+  providers: [UsersService, AlertService, LoaderService],
 })
 export class UsersComponent implements OnInit {
   cols: any;
@@ -26,14 +38,14 @@ export class UsersComponent implements OnInit {
   selectedRow!: User;
   items!: MenuItem[];
   displaySidebar!: boolean;
-  action = "add";
+  action = 'add';
   constructor(
     private permissionService: PermissionService,
     private confirmationService: ConfirmationService,
     private alertService: AlertService,
     private loaderService: LoaderService,
     private usersService: UsersService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cols = [
@@ -41,18 +53,39 @@ export class UsersComponent implements OnInit {
       { field: 'lastName', header: 'Last Name' },
       { field: 'username', header: 'Username' },
       { field: 'email', header: 'Email' },
-      { field: 'action', header: 'Action', sort: false, filter: false }
+      { field: 'role', header: 'Role' },
     ];
+    if (this.permissionService.hasPermission(['update_user', 'delete_user'])) {
+      this.cols.push({
+        field: 'action',
+        header: 'Action',
+        sort: false,
+        filter: false,
+      });
+    }
     this.getUsers();
     this.prepareMenu();
   }
   prepareMenu() {
     this.items = [];
-    if (this.permissionService.hasPermission(["update_user"])) {
-      this.items.push({ label: 'Edit User', icon: 'pi pi-pencil', command: () => { this.action = "edit"; this.displaySidebar = true; } });
+    if (this.permissionService.hasPermission(['update_user'])) {
+      this.items.push({
+        label: 'Edit User',
+        icon: 'pi pi-pencil',
+        command: () => {
+          this.action = 'edit';
+          this.displaySidebar = true;
+        },
+      });
     }
-    if (this.permissionService.hasPermission(["delete_user"])) {
-      this.items.push({ label: 'Delete User', icon: 'pi pi-times', command: () => { this.delete(this.selectedRow); } });
+    if (this.permissionService.hasPermission(['delete_user'])) {
+      this.items.push({
+        label: 'Delete User',
+        icon: 'pi pi-times',
+        command: () => {
+          this.delete(this.selectedRow);
+        },
+      });
     }
   }
   getUsers() {
@@ -62,13 +95,18 @@ export class UsersComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: (response: any) => {
+          response.forEach((user: any) => {
+            user['role'] = user.roles.map((item: Role) => {
+              return item.name;
+            });
+          });
           this.rows = response;
           this.loaderService.stop();
         },
         error: (error: any) => {
           this.loaderService.stop();
           this.alertService.error(error);
-        }
+        },
       });
   }
 
@@ -85,35 +123,44 @@ export class UsersComponent implements OnInit {
       message: 'Are you sure you want to delete the user?',
       accept: () => {
         this.loaderService.start();
-        this.usersService.deleteUser(row.id)
+        this.usersService
+          .deleteUser(row.id)
           .pipe(first())
           .subscribe({
             next: (response: any) => {
               this.loaderService.stop();
               this.alertService.success(response['message']);
-              const index = this.rows.findIndex((x: any) => x.id === this.selectedRow.id);
-              this.rows = this.rows.slice(0, index).concat(this.rows.slice(index + 1));
+              const index = this.rows.findIndex(
+                (x: any) => x.id === this.selectedRow.id
+              );
+              this.rows = this.rows
+                .slice(0, index)
+                .concat(this.rows.slice(index + 1));
             },
             error: (error: any) => {
               this.loaderService.stop();
               this.alertService.error(error);
-            }
+            },
           });
-      }
+      },
     });
   }
   onAdd() {
-    this.action = "add";
+    this.action = 'add';
     this.displaySidebar = true;
   }
   onAddUpdate(data: any) {
-    if (data.action === "add") {
-      this.rows.push(data);
+    data.params['role'] = data.params.roles.map((item: Role) => {
+      return item.name;
+    });
+
+    if (data.action === 'add') {
+      this.rows.push(data.params);
       this.rows = [...this.rows];
     } else {
-      const index = this.rows.findIndex((x: any) => x.id === data.id);
+      const index = this.rows.findIndex((x: any) => x.id === data.params.id);
       if (index != -1) {
-        this.rows[index] = data;
+        this.rows[index] = data.params;
       }
     }
     this.displaySidebar = false;

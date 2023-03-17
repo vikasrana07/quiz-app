@@ -4,15 +4,11 @@ import { Component, OnInit } from '@angular/core';
   // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'quiz-app-sidebar',
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
   menuItems!: Array<any>;
-  constructor(
-
-  ) {
-
-  }
+  constructor() {}
   ngOnInit() {
     this.setMenuItems();
   }
@@ -24,9 +20,9 @@ export class SidebarComponent implements OnInit {
           {
             name: 'Dashboard',
             href: ['/dashboard'],
-            icon: 'pi-home'
-          }
-        ]
+            icon: 'pi-home',
+          },
+        ],
       },
       {
         name: 'Manage Quiz',
@@ -39,8 +35,8 @@ export class SidebarComponent implements OnInit {
                 name: 'List',
                 href: ['/categories'],
                 icon: 'pi-list',
-              }
-            ]
+              },
+            ],
           },
           {
             name: 'Questions',
@@ -50,10 +46,21 @@ export class SidebarComponent implements OnInit {
                 name: 'List',
                 href: ['/questions'],
                 icon: 'pi-list',
-              }
-            ]
-          }
-        ]
+              },
+            ],
+          },
+          {
+            name: 'Quizzes',
+            icon: 'pi-reddit',
+            submenu: [
+              {
+                name: 'List',
+                href: ['/quizzes'],
+                icon: 'pi-list',
+              },
+            ],
+          },
+        ],
       },
       {
         name: 'Manage Users',
@@ -61,14 +68,14 @@ export class SidebarComponent implements OnInit {
           {
             name: 'Users',
             icon: 'pi-users',
-            href: ['/users']
+            href: ['/users'],
           },
           {
             name: 'Roles',
             icon: 'pi-shield',
-            href: ['/roles']
-          }
-        ]
+            href: ['/roles'],
+          },
+        ],
       },
       {
         name: 'Manage Settings',
@@ -77,9 +84,9 @@ export class SidebarComponent implements OnInit {
             name: 'Settings',
             icon: 'pi-cog',
             href: ['/settings'],
-          }
-        ]
-      }
+          },
+        ],
+      },
     ];
   }
 }

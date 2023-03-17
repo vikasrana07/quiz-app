@@ -1,4 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, ClassSerializerInterceptor, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  ClassSerializerInterceptor,
+  UseInterceptors,
+  HttpStatus,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,14 +20,19 @@ import { ResourceGuard } from './../auth/guards/resource.guards';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   @Resource('create_user')
   @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async create(@Body() createUserDto: CreateUserDto) {
+    const row = await this.usersService.create(createUserDto);
+    return {
+      params: row,
+      message: 'User created successfully',
+      statusCode: HttpStatus.OK,
+    };
   }
 
   @Get()
@@ -34,14 +51,26 @@ export class UsersController {
   @Patch(':id')
   @Resource('update_user')
   @UseGuards(JwtGuard, ResourceGuard)
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(
+    @Param('id') id: number,
+    @Body() updateUserDto: Partial<UpdateUserDto>
+  ) {
+    const row = await this.usersService.update(+id, updateUserDto);
+    return {
+      params: row,
+      message: 'User updated successfully',
+      statusCode: HttpStatus.OK,
+    };
   }
 
   @Delete(':id')
   @Resource('delete_user')
   @UseGuards(JwtGuard, ResourceGuard)
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const row = await this.usersService.remove(+id);
+    return {
+      message: 'User deleted successfully',
+      data: row,
+    };
   }
 }

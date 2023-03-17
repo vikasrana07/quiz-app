@@ -4,16 +4,20 @@
         [templates]="[{type:'body',template:bodyTemplate}]">
     </x-table>
     <ng-template #captionButtonTemplate>
-        <button type="button" *hasPermission="['create_user']" class="p-button p-button-icon-only p-button-rounded"
-            pTooltip="Add New User" (click)="onAdd()" tooltipPosition="top">
+        <button title="Add New User" type="button" *hasPermission="['create_user']"
+            class="p-button p-button-icon-only p-button-rounded" pTooltip="Add New User" (click)="onAdd()"
+            tooltipPosition="top">
             <i class="pi pi-plus"></i>
         </button>
     </ng-template>
     <ng-template let-row="row" pTemplate="body" let-columns="columns" #bodyTemplate>
         <tr>
             <td *ngFor="let col of columns" isEllipsisActive>
-                <quiz-app-three-dot-menu *ngIf="col.field === 'action'" (clickFunction)="openMenu($event, cm, row)">
-                </quiz-app-three-dot-menu>
+                <span *ngIf="col.field === 'action' && row.username !=='superadmin'">
+                    <quiz-app-three-dot-menu *hasPermission="['update_user','delete_user']"
+                        (clickFunction)="openMenu($event, cm, row)">
+                    </quiz-app-three-dot-menu>
+                </span>
                 <span *ngIf="col.field !== 'action'">{{row[col.field]}}</span>
             </td>
         </tr>

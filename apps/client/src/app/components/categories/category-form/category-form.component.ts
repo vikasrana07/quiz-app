@@ -2,7 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 
 import { CategoriesService } from '../categories.service';
@@ -15,7 +20,13 @@ import { InputTextModule } from 'primeng/inputtext';
   selector: 'quiz-app-category-form',
   templateUrl: './category-form.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, DropdownModule, InputTextModule, CommonModule]
+  imports: [
+    ReactiveFormsModule,
+    ButtonModule,
+    DropdownModule,
+    InputTextModule,
+    CommonModule,
+  ],
 })
 export class CategoryFormComponent implements OnInit {
   isSubmitted!: boolean;
@@ -39,16 +50,18 @@ export class CategoryFormComponent implements OnInit {
     if (Object.keys(this.selectedRow).length) {
       this.categoryForm.setValue({
         name: this.selectedRow.name,
-        categoryId: this.selectedRow.categoryId
+        categoryId: this.selectedRow.categoryId,
       });
     }
   }
   createCategoryForm() {
     this.categoryForm = new FormGroup({
-      name: new FormControl('', [Validators.required])
+      name: new FormControl('', [Validators.required]),
     });
   }
-  get formControls(): any { return this.categoryForm.controls; }
+  get formControls(): any {
+    return this.categoryForm.controls;
+  }
 
   onSubmit() {
     this.isSubmitted = true;
@@ -57,8 +70,8 @@ export class CategoryFormComponent implements OnInit {
     }
 
     const data: any = {
-      "name": this.formControls.name.value
-    }
+      name: this.formControls.name.value,
+    };
     if (Object.keys(this.selectedRow).length) {
       this.updateCategory(data);
     } else {
@@ -67,37 +80,33 @@ export class CategoryFormComponent implements OnInit {
   }
   createCategory(data: any) {
     this.loaderService.start();
-    this.categoriesService
-      .createCategory(data)
-      .subscribe({
-        next: (response: any) => {
-          this.loaderService.stop();
-          this.alertService.success(response["message"]);
-          data.id = response?.data?.id;
-          this.closeDialog(data);
-        },
-        error: (error: any) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
-        }
-      });
+    this.categoriesService.createCategory(data).subscribe({
+      next: (response: any) => {
+        this.loaderService.stop();
+        this.alertService.success(response['message']);
+        data.id = response?.data?.id;
+        this.closeDialog(data);
+      },
+      error: (error: any) => {
+        this.loaderService.stop();
+        this.alertService.error(error);
+      },
+    });
   }
   updateCategory(data: any) {
     this.loaderService.start();
-    this.categoriesService
-      .updateCategory(this.selectedRow.id, data)
-      .subscribe({
-        next: (response: any) => {
-          this.loaderService.stop();
-          this.alertService.success(response["message"]);
-          data.id = this.selectedRow.id;
-          this.closeDialog(data);
-        },
-        error: (error: any) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
-        }
-      });
+    this.categoriesService.updateCategory(this.selectedRow.id, data).subscribe({
+      next: (response: any) => {
+        this.loaderService.stop();
+        this.alertService.success(response['message']);
+        data.id = this.selectedRow.id;
+        this.closeDialog(data);
+      },
+      error: (error: any) => {
+        this.loaderService.stop();
+        this.alertService.error(error);
+      },
+    });
   }
   closeDialog(data?: any) {
     this.ref.close(data);

@@ -10,12 +10,17 @@ export class RolesService {
   constructor(
     @InjectRepository(Role)
     private roleRepo: Repository<Role>
-  ) { }
+  ) {}
 
   async create(createRoleDto: CreateRoleDto) {
-    const row = await this.roleRepo.findOne({ where: { name: createRoleDto.name } });
+    const row = await this.roleRepo.findOne({
+      where: { name: createRoleDto.name },
+    });
     if (row) {
-      throw new HttpException('Role name already exists.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Role name already exists.',
+        HttpStatus.BAD_REQUEST
+      );
     }
     createRoleDto.resources = createRoleDto.resources.toString();
     const role = this.roleRepo.create(createRoleDto);
@@ -27,9 +32,14 @@ export class RolesService {
   }
 
   async update(id: number, updateRoleDto: UpdateRoleDto) {
-    const row = await this.roleRepo.findOne({ where: { name: updateRoleDto.name, id: Not(id) } });
+    const row = await this.roleRepo.findOne({
+      where: { name: updateRoleDto.name, id: Not(id) },
+    });
     if (row) {
-      throw new HttpException('Role name already exists.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Role name already exists.',
+        HttpStatus.BAD_REQUEST
+      );
     }
     updateRoleDto.resources = updateRoleDto.resources.toString();
     await this.roleRepo.update({ id }, updateRoleDto);
@@ -40,8 +50,10 @@ export class RolesService {
     try {
       return await this.roleRepo.delete({ id });
     } catch (e) {
-      throw new HttpException('Role can not be removed.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Role can not be removed.',
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
-
 }

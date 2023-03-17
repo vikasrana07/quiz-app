@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
@@ -8,7 +17,7 @@ import { ResourceGuard } from '../auth/guards/resource.guards';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) { }
+  constructor(private readonly rolesService: RolesService) {}
 
   @Post()
   @Resource('create_role')
@@ -17,7 +26,7 @@ export class RolesController {
     const row = await this.rolesService.create(createRoleDto);
     return {
       message: 'Role created successfully',
-      data: row
+      data: row,
     };
   }
 
@@ -35,7 +44,7 @@ export class RolesController {
     const row = await this.rolesService.update(+id, updateRoleDto);
     return {
       message: 'Role updated successfully',
-      data: row
+      data: row,
     };
   }
 

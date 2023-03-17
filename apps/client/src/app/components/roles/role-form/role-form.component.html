@@ -10,21 +10,22 @@
     <div class="field grid">
       <label htmlfor="lastName" class="col-12 mb-2 md:col-4 md:mb-0">Permissions</label>
       <div class="col-12 md:col-8">
-        <div formArrayName="resources" *ngFor="let option of roleForm.get('resources').controls; let i=index">
-          <ng-container [formGroupName]="i">
-            <p-checkbox [binary]="true" class="flex align-items-center mt-1" [value]="option.value.name"
-              [label]="option.value.label" formControlName="isSelected"
-              [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && resources.controls[i].get('isSelected')?.errors }">
-            </p-checkbox>
-          </ng-container>
-        </div>
+        <!-- <div class="select_all pt-2 pb-2 pe-3 ps-3 bg-primary" >
+          <label for="select_all_{{role.roleuuid}}" class="text-white">
+            <p-checkbox [(ngModel)]="selectAll" [binary]="true" label="Select all" (onChange)="selectUnSelectAll()" [disabled]="role['role-name'] == disabledRolePermission"></p-checkbox>
+          </label>
+        </div> -->
+
+        <p-tree [value]="permissions" selectionMode="checkbox" [(selection)]="selectedPermissions">
+          <ng-template let-node pTemplate="default">
+            <span [pTooltip]="node.description"> {{ node.label}}</span>
+          </ng-template>
+        </p-tree>
       </div>
     </div>
-
   </div>
   <div class="mt-5"></div>
   <div class="flex justify-content-end">
-    <!--  <button type="button" pButton class="mr-2" (click)="closeDialog()">Close</button> -->
     <button type="submit" pButton>Save</button>
   </div>
 </form>

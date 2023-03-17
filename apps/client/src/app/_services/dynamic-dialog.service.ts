@@ -4,13 +4,11 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 @Injectable()
 export class DynamicDialogService {
   ref!: DynamicDialogRef;
-  constructor(
-    private dialogService: DialogService
-  ) { }
+  constructor(private dialogService: DialogService) {}
 
   showInformationDialog(component: any, title: any, data: any, options?: any) {
-    let width = "80%";
-    let height = "500px";
+    let width = '80%';
+    let height = '500px';
     let footer = null;
     let styleClass = null;
     if (options) {
@@ -32,12 +30,11 @@ export class DynamicDialogService {
       footer: footer,
       width: width,
       contentStyle: {
-        height: height
+        height: height,
       },
       styleClass: styleClass,
-      data: data
+      data: data,
     });
     return this.ref;
   }
-
 }

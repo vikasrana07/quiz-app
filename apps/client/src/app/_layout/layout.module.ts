@@ -10,7 +10,10 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SidebarModule } from 'primeng/sidebar';
 import { AvatarModule } from 'primeng/avatar';
 
-import { SidebarToggleDirective, SidebarMenuToggleDirective } from '../_directives';
+import {
+  SidebarToggleDirective,
+  SidebarMenuToggleDirective,
+} from '../_directives';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,19 +21,15 @@ import { SidebarToggleDirective, SidebarMenuToggleDirective } from '../_directiv
     ConfirmDialogModule,
     TooltipModule,
     SidebarModule,
-    AvatarModule
+    AvatarModule,
   ],
-  exports: [
-    FooterComponent,
-    HeaderComponent,
-    SidebarComponent
-  ],
+  exports: [FooterComponent, HeaderComponent, SidebarComponent],
   declarations: [
     FooterComponent,
     HeaderComponent,
     SidebarComponent,
     SidebarToggleDirective,
-    SidebarMenuToggleDirective
-  ]
+    SidebarMenuToggleDirective,
+  ],
 })
-export class LayoutModule { }
+export class LayoutModule {}

@@ -20,18 +20,18 @@ import { ResourceGuard } from '../auth/guards/resource.guards';
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private categoriesService: CategoriesService) { }
+  constructor(private categoriesService: CategoriesService) {}
 
   @Get()
   @Resource('list_category')
   @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllCategories() {
-    const data = await this.categoriesService.showAll();
+    const row = await this.categoriesService.showAll();
     return {
       statusCode: HttpStatus.OK,
       message: 'Categories fetched successfully',
-      data
+      params: row,
     };
   }
 
@@ -43,14 +43,17 @@ export class CategoriesController {
     return {
       statusCode: HttpStatus.OK,
       message: 'Category created successfully',
-      data
+      data,
     };
   }
 
   @Patch(':id')
   @Resource('update_category')
   @UseGuards(JwtGuard, ResourceGuard)
-  async updateCategory(@Param('id') id: number, @Body() data: Partial<CreateCategoryDto>) {
+  async updateCategory(
+    @Param('id') id: number,
+    @Body() data: Partial<CreateCategoryDto>
+  ) {
     await this.categoriesService.update(id, data);
     return {
       statusCode: HttpStatus.OK,

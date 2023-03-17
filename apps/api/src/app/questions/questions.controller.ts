@@ -9,7 +9,7 @@ import {
   HttpStatus,
   ClassSerializerInterceptor,
   UseInterceptors,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 
 import { QuestionsService } from './questions.service';
@@ -21,18 +21,31 @@ import { ResourceGuard } from '../auth/guards/resource.guards';
 
 @Controller('questions')
 export class QuestionsController {
-  constructor(private questionsService: QuestionsService) { }
+  constructor(private questionsService: QuestionsService) {}
 
   @Get()
   @Resource('list_question')
   @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllQuestions() {
-    const data = await this.questionsService.showAll();
+    const row = await this.questionsService.showAll();
     return {
       statusCode: HttpStatus.OK,
       message: 'Questions fetched successfully',
-      data
+      params: row,
+    };
+  }
+
+  @Get('types')
+  @Resource('list_question')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async showAllQuestionTypes() {
+    const row = await this.questionsService.showAllQuestionTypes();
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Question Types fetched successfully',
+      params: row,
     };
   }
 
@@ -41,11 +54,11 @@ export class QuestionsController {
   @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async createQuestion(@Body() body: CreateQuestionDto) {
-    const data = await this.questionsService.create(body);
+    const row = await this.questionsService.create(body);
     return {
       statusCode: HttpStatus.OK,
       message: 'Question created successfully',
-      data
+      params: row,
     };
   }
 
@@ -62,11 +75,16 @@ export class QuestionsController {
   @Patch(':id')
   @Resource('update_question')
   @UseGuards(JwtGuard, ResourceGuard)
-  async updateQuestion(@Param('id') id: number, @Body() data: Partial<UpdateQuestionDto>) {
-    await this.questionsService.update(id, data);
+  @UseInterceptors(ClassSerializerInterceptor)
+  async updateQuestion(
+    @Param('id') id: number,
+    @Body() data: Partial<UpdateQuestionDto>
+  ) {
+    const row = await this.questionsService.update(id, data);
     return {
       statusCode: HttpStatus.OK,
       message: 'Question updated successfully',
+      params: row,
     };
   }
 

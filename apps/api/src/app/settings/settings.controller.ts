@@ -5,34 +5,44 @@ import {
   Body,
   HttpStatus,
   ClassSerializerInterceptor,
-  UseInterceptors
+  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 
-
 import { SettingsService } from './settings.service';
-import { SettingsDTO } from './settings.dto';
+import { Resource } from '../auth/decorators/resource.decorator';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { ResourceGuard } from '../auth/guards/resource.guards';
+import { UpdateSettingDto } from './dto/update-setting.dto';
 
 @Controller('settings')
 export class SettingsController {
-  constructor(private settingsService: SettingsService) { }
+  constructor(private settingsService: SettingsService) {}
 
   @Get()
+  @Resource('list_setting')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllSettings() {
-    const data = await this.settingsService.showAll();
+    const row = await this.settingsService.showAll();
     return {
       statusCode: HttpStatus.OK,
       message: 'Settings fetched successfully',
-      data
+      params: row,
     };
   }
 
   @Patch()
-  async updateSetting(@Body() data: Partial<SettingsDTO>) {
-    await this.settingsService.update(data);
+  @Resource('update_setting')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async updateSetting(@Body() updateSettingDto: Partial<UpdateSettingDto>) {
+    const row = await this.settingsService.update(updateSettingDto);
     return {
       statusCode: HttpStatus.OK,
-      message: 'Setting updated successfully',
+      message: 'Settings updated successfully',
+      params: row,
     };
   }
 }

@@ -1,24 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { CheckboxModule } from 'primeng/checkbox';
 import { User } from '../../_models';
-import { AlertService, AuthenticationService, LoaderService } from '../../_services';
+import {
+  AlertService,
+  AuthenticationService,
+  LoaderService,
+} from '../../_services';
 
 @Component({
   selector: 'quiz-app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CheckboxModule
-  ]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxModule],
 })
-
 export class LoginComponent implements OnInit {
   loading = false;
   isSubmitted = false;
@@ -31,49 +35,58 @@ export class LoginComponent implements OnInit {
   ) {
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required])
+      password: new FormControl('', [Validators.required]),
     });
   }
 
-  ngOnInit(): void {
-
+  ngOnInit(): void {}
+  get formControls(): any {
+    return this.loginForm.controls;
   }
-  get formControls(): any { return this.loginForm.controls; }
   onSubmit() {
     this.isSubmitted = true;
     if (!this.loginForm.valid) {
       return;
     }
     this.loaderService.start();
-    this.authenticationService.generateToken(this.formControls.username.value, this.formControls.password.value)
+    this.authenticationService
+      .generateToken(
+        this.formControls.username.value,
+        this.formControls.password.value
+      )
       .subscribe({
         next: () => {
-          this.validateToken()
+          this.validateToken();
         },
         error: (error) => {
           this.loaderService.stop();
           this.alertService.error(error);
-        }
+        },
       });
   }
   validateToken() {
-    this.authenticationService.validateToken()
-      .subscribe({
-        next: (response: User) => {
-          this.loaderService.stop();
-          const permissions: string[] = [...new Set([].concat(...response.roles.map((role: any) => role.resources.split(','))))]
-          response.permissions = permissions;
-          if (permissions.includes('admin_portal_access')) {
-            this.authenticationService.setUserData(response);
-            this.router.navigate(['/dashboard']);
-          } else {
-            this.alertService.error("Access Denied");
-          }
-        },
-        error: (error) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
+    this.authenticationService.validateToken().subscribe({
+      next: (response: User) => {
+        this.loaderService.stop();
+        const permissions: string[] = [
+          ...new Set(
+            [].concat(
+              ...response.roles.map((role: any) => role.resources.split(','))
+            )
+          ),
+        ];
+        response.permissions = permissions;
+        if (permissions.includes('portal_access_admin')) {
+          this.authenticationService.setUserData(response);
+          this.router.navigate(['/dashboard']);
+        } else {
+          this.alertService.error('Access Denied');
         }
-      });
+      },
+      error: (error) => {
+        this.loaderService.stop();
+        this.alertService.error(error);
+      },
+    });
   }
 }

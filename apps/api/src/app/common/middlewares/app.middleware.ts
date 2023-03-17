@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, NestMiddleware, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -11,7 +17,7 @@ export class AppMiddleware implements NestMiddleware {
     private usersService: UsersService,
     private utilService: UtilService,
     private jwtService: JwtService
-  ) { }
+  ) {}
   async use(req: Request, res: Response, next: NextFunction) {
     if (req?.url?.includes('api/')) {
       const bearerToken = this.utilService.getToken(req);
@@ -27,8 +33,11 @@ export class AppMiddleware implements NestMiddleware {
     const verifyOptions = { secret: this.configService.get('JWT_SECRET') };
     let isValid = false;
     try {
-      const payload = await this.jwtService.verifyAsync(bearerToken, verifyOptions);
-      const { username, id, iat, exp } = payload;
+      const payload = await this.jwtService.verifyAsync(
+        bearerToken,
+        verifyOptions
+      );
+      const { username } = payload;
       const user = await this.usersService.findByUsername(username);
       if (user) {
         isValid = true;

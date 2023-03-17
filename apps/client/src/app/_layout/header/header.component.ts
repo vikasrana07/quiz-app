@@ -1,7 +1,11 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AlertService, AuthenticationService, LoaderService } from '../../_services';
+import {
+  AlertService,
+  AuthenticationService,
+  LoaderService,
+} from '../../_services';
 
 @Component({
   selector: 'quiz-app-header',
@@ -15,9 +19,7 @@ export class HeaderComponent implements OnInit {
     private loaderService: LoaderService,
     private alertService: AlertService,
     private authenticationService: AuthenticationService
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
     this.user = this.authenticationService.userData;
@@ -25,17 +27,16 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.loaderService.start();
-    this.authenticationService.logout()
-      .subscribe({
-        next: () => {
-          this.loaderService.stop();
-          this.router.navigate(['/login']);
-        },
-        error: (error) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
-        }
-      });
+    this.authenticationService.logout().subscribe({
+      next: () => {
+        this.loaderService.stop();
+        this.router.navigate(['/login']);
+      },
+      error: (error) => {
+        this.loaderService.stop();
+        this.alertService.error(error);
+      },
+    });
   }
   navigateTo(url: string) {
     this.displaySidebar = false;

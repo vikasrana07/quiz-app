@@ -1,4 +1,5 @@
 export class Permission {
-    name!: string;
-    label!: string;
+  key!: string;
+  label!: string;
+  description?: string;
 }

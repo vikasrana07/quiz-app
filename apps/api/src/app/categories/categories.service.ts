@@ -10,16 +10,18 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
-    private categoryRepository: Repository<Category>,
-  ) { }
+    private categoryRepository: Repository<Category>
+  ) {}
 
   async showAll() {
     return await this.categoryRepository.find();
   }
 
   async create(body: CreateCategoryDto) {
-    const username = await this.categoryRepository.findOne({ where: { name: body.name } });
-    if (username != null) {
+    const row = await this.categoryRepository.findOne({
+      where: { name: body.name },
+    });
+    if (row != null) {
       throw new HttpException('Category already exists', HttpStatus.CONFLICT);
     } else {
       const data = this.categoryRepository.create(body);
@@ -28,9 +30,14 @@ export class CategoriesService {
   }
 
   async update(id: number, updateCategoryDto: Partial<UpdateCategoryDto>) {
-    const row = await this.categoryRepository.findOne({ where: { name: updateCategoryDto.name, id: Not(id) } });
+    const row = await this.categoryRepository.findOne({
+      where: { name: updateCategoryDto.name, id: Not(id) },
+    });
     if (row) {
-      throw new HttpException('Category already exists.', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Category already exists.',
+        HttpStatus.BAD_REQUEST
+      );
     }
     await this.categoryRepository.update({ id }, updateCategoryDto);
     return await this.categoryRepository.findOne({ where: { id: id } });

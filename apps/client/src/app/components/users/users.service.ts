@@ -6,9 +6,7 @@ import { User } from '../../_models';
 import { HttpService } from '../../_services';
 @Injectable()
 export class UsersService {
-  constructor(
-    private httpService: HttpService
-  ) { }
+  constructor(private httpService: HttpService) {}
 
   getUsers(): Observable<HttpResponse<User>> {
     return this.httpService.get('users');
@@ -22,5 +20,4 @@ export class UsersService {
   deleteUser(id: number): Observable<HttpResponse<any>> {
     return this.httpService.delete('users/' + id);
   }
-
 }

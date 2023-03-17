@@ -1,16 +1,11 @@
 /* eslint-disable @nrwl/nx/enforce-module-boundaries */
-import {
-  Directive,
-  Input,
-  TemplateRef,
-  ViewContainerRef
-} from '@angular/core';
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 import { PermissionService } from '../_services';
 
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[hasPermission]',
-  standalone: true
+  standalone: true,
 })
 export class HasPermissionDirective {
   private permissions: string[] = [];
@@ -21,9 +16,7 @@ export class HasPermissionDirective {
     private templateRef: TemplateRef<any>,
     private viewContainer: ViewContainerRef,
     private permissionService: PermissionService
-  ) {
-
-  }
+  ) {}
 
   @Input()
   set hasPermission(val: Array<string>) {
@@ -39,7 +32,9 @@ export class HasPermissionDirective {
 
   private updateView() {
     if (this.permissions) {
-      if (this.permissionService.hasPermission(this.permissions, this.logicalOp)) {
+      if (
+        this.permissionService.hasPermission(this.permissions, this.logicalOp)
+      ) {
         if (this.isHidden) {
           this.viewContainer.createEmbeddedView(this.templateRef);
           this.isHidden = false;

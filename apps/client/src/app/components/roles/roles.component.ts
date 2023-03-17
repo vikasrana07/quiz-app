@@ -16,8 +16,15 @@ import { RolesService } from './roles.service';
   selector: 'quiz-app-roles',
   templateUrl: './roles.component.html',
   standalone: true,
-  imports: [RoleFormComponent, XTableComponent, ThreeDotMenuComponent, CommonModule, ContextMenuModule, SidebarModule],
-  providers: [RolesService, AlertService, LoaderService]
+  imports: [
+    RoleFormComponent,
+    XTableComponent,
+    ThreeDotMenuComponent,
+    CommonModule,
+    ContextMenuModule,
+    SidebarModule,
+  ],
+  providers: [RolesService, AlertService, LoaderService],
 })
 export class RolesComponent implements OnInit {
   cols: any;
@@ -25,27 +32,40 @@ export class RolesComponent implements OnInit {
   selectedRow!: Role;
   items!: MenuItem[];
   displaySidebar!: boolean;
-  action = "add";
+  action = 'add';
   constructor(
     private confirmationService: ConfirmationService,
     private alertService: AlertService,
     private loaderService: LoaderService,
     private rolesService: RolesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.cols = [
       { field: 'name', header: 'Role Name' },
       { field: 'resources', header: 'Permissions' },
-      { field: 'action', header: 'Action', sort: false, filter: false }
+      { field: 'action', header: 'Action', sort: false, filter: false },
     ];
     this.getRoles();
     this.prepareMenu();
   }
   prepareMenu() {
     this.items = [];
-    this.items.push({ label: 'Edit Role', icon: 'pi pi-pencil', command: () => { this.action = "edit"; this.displaySidebar = true; } });
-    this.items.push({ label: 'Delete Role', icon: 'pi pi-times', command: () => { this.delete(this.selectedRow); } });
+    this.items.push({
+      label: 'Edit Role',
+      icon: 'pi pi-pencil',
+      command: () => {
+        this.action = 'edit';
+        this.displaySidebar = true;
+      },
+    });
+    this.items.push({
+      label: 'Delete Role',
+      icon: 'pi pi-times',
+      command: () => {
+        this.delete(this.selectedRow);
+      },
+    });
   }
   getRoles() {
     this.loaderService.start();
@@ -60,7 +80,7 @@ export class RolesComponent implements OnInit {
         error: (error: any) => {
           this.loaderService.stop();
           this.alertService.error(error);
-        }
+        },
       });
   }
 
@@ -77,29 +97,34 @@ export class RolesComponent implements OnInit {
       message: 'Are you sure you want to delete the role?',
       accept: () => {
         this.loaderService.start();
-        this.rolesService.deleteRole(row.id)
+        this.rolesService
+          .deleteRole(row.id)
           .pipe(first())
           .subscribe({
             next: (response: any) => {
               this.loaderService.stop();
               this.alertService.success(response['message']);
-              const index = this.rows.findIndex((x: any) => x.id === this.selectedRow.id);
-              this.rows = this.rows.slice(0, index).concat(this.rows.slice(index + 1));
+              const index = this.rows.findIndex(
+                (x: any) => x.id === this.selectedRow.id
+              );
+              this.rows = this.rows
+                .slice(0, index)
+                .concat(this.rows.slice(index + 1));
             },
             error: (error: any) => {
               this.loaderService.stop();
               this.alertService.error(error);
-            }
+            },
           });
-      }
+      },
     });
   }
   onAdd() {
-    this.action = "add";
+    this.action = 'add';
     this.displaySidebar = true;
   }
   onAddUpdate(data: any) {
-    if (data.action === "add") {
+    if (data.action === 'add') {
       this.rows.push(data);
       this.rows = [...this.rows];
     } else {

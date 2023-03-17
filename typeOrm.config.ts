@@ -20,7 +20,6 @@ export default new DataSource({
   migrations: [
     CreateUsersTable1632591678454,
     CreateRolesTable1632592162862,
-    CreateUsersRolesTable1632592716980
+    CreateUsersRolesTable1632592716980,
   ],
-
 });

@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
-import { AuthenticationService } from "./authentication.service";
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,8 +8,8 @@ import { AuthenticationService } from "./authentication.service";
 export class IsLoggedIn {
   constructor(
     private router: Router,
-    private authService: AuthenticationService) {
-  }
+    private authService: AuthenticationService
+  ) {}
 
   resolve(): void {
     if (this.authService.isLoggedIn()) {

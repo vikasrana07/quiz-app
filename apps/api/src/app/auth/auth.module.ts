@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JwtModule } from "@nestjs/jwt";
+import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 import { AuthService } from './auth.service';
@@ -16,12 +16,12 @@ import { UtilService } from '../common/services';
       inject: [ConfigService],
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
-        signOptions: { expiresIn: '3600s' }
-      })
+        signOptions: { expiresIn: '3600s' },
+      }),
     }),
-    TypeOrmModule.forFeature([User])
+    TypeOrmModule.forFeature([User]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, ConfigService, UtilService, JwtStrategy]
+  providers: [AuthService, ConfigService, UtilService, JwtStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

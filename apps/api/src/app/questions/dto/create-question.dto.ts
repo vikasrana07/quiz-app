@@ -1,17 +1,12 @@
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateQuestionDto {
+  @IsNotEmpty()
+  question: string;
 
-    @IsNotEmpty()
-    name: string;
+  @IsNotEmpty()
+  options: string;
 
-    @IsNotEmpty()
-    question: string;
-
-    @IsNotEmpty()
-    options: string;
-
-    @IsNotEmpty()
-    answer: string;
-
+  @IsNotEmpty()
+  answer: string;
 }

@@ -3,14 +3,13 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'quiz-app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+  styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent implements OnInit {
   currentYear: any;
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.currentYear = new Date().getFullYear();
   }
-
 }

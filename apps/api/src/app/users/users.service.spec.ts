@@ -5,19 +5,19 @@ import { MockType, repositoryMockFactory } from '../mockTest/utils';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 
-
-
 describe('UsersService', () => {
   let service: UsersService;
-  let userRepoMock: MockType<Repository<User>>
+  let userRepoMock: MockType<Repository<User>>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
-        { provide: getRepositoryToken(User), useFactory: repositoryMockFactory },
+        {
+          provide: getRepositoryToken(User),
+          useFactory: repositoryMockFactory,
+        },
       ],
-      
     }).compile();
 
     service = module.get<UsersService>(UsersService);
@@ -26,7 +26,7 @@ describe('UsersService', () => {
 
   it('should be defined', () => {
     userRepoMock.findOne({
-      name: "teste"
+      name: 'teste',
     });
     expect(service).toBeDefined();
   });

@@ -1,0 +1,8 @@
+::ng-deep .preview-counter {
+  padding: 15px;
+  border-radius: 5px;
+  background: #e6e6e6 !important;
+  box-shadow: 0 3px 5px #00000005, 0 0 2px #0000000d, 0 1px 4px #00000014 !important;
+  min-width: 300px;
+  min-height: 170px;
+}

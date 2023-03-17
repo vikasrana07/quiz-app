@@ -4,14 +4,16 @@ import { AuthenticationService } from './authentication.service';
 
 @Injectable({ providedIn: 'root' })
 export class PermissionService {
-  constructor(private authService: AuthenticationService) { }
+  constructor(private authService: AuthenticationService) {}
 
   hasPermission(permissions: any, logicalOp = 'OR') {
     let userHasPermission = false;
     const user = this.authService.userData;
     if (user && user.permissions) {
       for (const permission of permissions) {
-        const permissionFound = user.permissions.find((x: string) => x.toUpperCase() === permission.toUpperCase());
+        const permissionFound = user.permissions.find(
+          (x: string) => x.toUpperCase() === permission.toUpperCase()
+        );
         if (permissionFound) {
           userHasPermission = true;
           if (logicalOp === 'OR') {

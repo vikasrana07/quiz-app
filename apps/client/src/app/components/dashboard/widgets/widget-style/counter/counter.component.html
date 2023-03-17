@@ -1,0 +1,4 @@
+<ngx-ui-loader [loaderId]="loaderId" [text]="''"></ngx-ui-loader>
+<!-- <div [innerHTML]="widgetData?.template"></div> -->
+<ndc-dynamic *ngIf="widgetData" [ndcDynamicComponent]="component" [ndcDynamicInputs]="{widget:widgetData}">
+</ndc-dynamic>

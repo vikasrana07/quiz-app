@@ -21,5 +21,4 @@ describe('RolesService', () => {
 
     console.log(result);
   });
-
 });

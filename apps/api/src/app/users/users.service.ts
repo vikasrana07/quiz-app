@@ -1,39 +1,46 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './../roles/entities/role.entity';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
-
   constructor(
     @InjectRepository(User)
     private userRepo: Repository<User>,
 
     @InjectRepository(Role)
     private roleRepo: Repository<Role>
-  ) {
-
-  }
+  ) {}
   async create(createUserDto: CreateUserDto) {
-    const { roles, ...dataInsert } = createUserDto;
-
-    let userRoles = await Promise.all(
-      roles.map(role => {
-        return this.roleRepo.findOne({ where: { name: role } });
-      })
-    );
-    userRoles = userRoles.filter(role => role);
-
-    const userToSave = this.userRepo.create({
-      ...dataInsert,
-      roles: userRoles
+    const username = await this.userRepo.findOne({
+      where: { username: createUserDto.username },
     });
+    const email = await this.userRepo.findOne({
+      where: { email: createUserDto.email },
+    });
+    if (username != null) {
+      throw new HttpException('Username already exists', HttpStatus.CONFLICT);
+    } else if (email != null) {
+      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+    } else {
+      const { roles, ...dataInsert } = createUserDto;
 
-    return this.userRepo.save(userToSave);
+      const userRoles = await Promise.all(
+        roles.map((role) => {
+          return this.roleRepo.findOne({ where: { id: +role } });
+        })
+      );
+      const userToSave = this.userRepo.create({
+        ...dataInsert,
+        roles: userRoles,
+      });
+
+      return this.userRepo.save(userToSave);
+    }
   }
 
   findAll() {
@@ -44,12 +51,39 @@ export class UsersService {
     return this.userRepo.findOne({ where: { id: id } });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: Partial<UpdateUserDto>) {
+    const username = await this.userRepo.findOne({
+      where: { username: updateUserDto.username, id: Not(id) },
+    });
+    const email = await this.userRepo.findOne({
+      where: { email: updateUserDto.email, id: Not(id) },
+    });
+    if (username != null) {
+      throw new HttpException(
+        'Username already exists.',
+        HttpStatus.BAD_REQUEST
+      );
+    } else if (email != null) {
+      throw new HttpException('Email already exists', HttpStatus.CONFLICT);
+    } else {
+      const { roles, ...dataUpdate } = updateUserDto;
+      const userRoles = await Promise.all(
+        roles.map((role) => {
+          return this.roleRepo.findOne({ where: { id: +role } });
+        })
+      );
+      const userToUpdate = this.userRepo.create({
+        ...dataUpdate,
+        id: id,
+        roles: userRoles,
+      });
+      return await this.userRepo.save(userToUpdate);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    await this.userRepo.delete({ id: id });
+    return { deleted: true };
   }
 
   async findByUsername(username: string) {

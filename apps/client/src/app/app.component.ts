@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { NgxUiLoaderModule } from 'ngx-ui-loader';
 import { ToastModule } from 'primeng/toast';
@@ -19,8 +24,8 @@ import { LayoutModule } from './_layout/layout.module';
     CommonModule,
     RouterModule,
     NgxUiLoaderModule,
-    ToastModule
-  ]
+    ToastModule,
+  ],
 })
 export class AppComponent implements OnInit, OnDestroy {
   /*  hello$ = this.http.get<Message>('/api/hello');
@@ -32,15 +37,14 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private logger: NGXLogger
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.logger.info('AppComponent: ngOnInit()');
-    this.navigationSubscription = this.router.events.subscribe(event => {
+    this.navigationSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
-        this.appLayout = this.activatedRoute?.firstChild?.snapshot.data['appLayout'] !== false;
+        this.appLayout =
+          this.activatedRoute?.firstChild?.snapshot.data['appLayout'] !== false;
       }
     });
   }

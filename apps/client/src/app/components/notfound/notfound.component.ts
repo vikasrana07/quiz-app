@@ -7,15 +7,13 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './notfound.component.html',
   styleUrls: ['./notfound.component.css'],
   standalone: true,
-  imports: [ButtonModule]
+  imports: [ButtonModule],
 })
 export class NotFoundComponent implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
   handleClick() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/']);
   }
 }
