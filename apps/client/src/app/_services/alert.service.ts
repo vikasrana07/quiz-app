@@ -3,11 +3,7 @@ import { MessageService } from 'primeng/api';
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
-  constructor(
-    private messageService: MessageService
-  ) {
-
-  }
+  constructor(private messageService: MessageService) {}
 
   success(message: string, title: string = 'Success'): void {
     this.showMessage(title, message, 'success');
@@ -19,7 +15,15 @@ export class AlertService {
 
   error(response: any, title: string = 'Error'): void {
     const message = response['message'] || response;
-    this.showMessage(title, message, 'error');
+    let isSessionExpired = false;
+    const ignoreMessage = ['TokenExpiredError'];
+    if (message && ignoreMessage.indexOf(message) != -1) {
+      isSessionExpired = true;
+    }
+
+    if (!isSessionExpired) {
+      this.showMessage(title, message, 'error');
+    }
   }
 
   clear(): void {
@@ -27,6 +31,10 @@ export class AlertService {
   }
 
   showMessage(title: string, message: string, type: string): void {
-    this.messageService.add({ severity: type, summary: title, detail: message });
+    this.messageService.add({
+      severity: type,
+      summary: title,
+      detail: message,
+    });
   }
 }

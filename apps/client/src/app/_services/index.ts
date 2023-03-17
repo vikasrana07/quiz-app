@@ -1,5 +1,6 @@
 export * from './authentication.service';
 export * from './permission.service';
+export * from './resources.service';
 export * from './alert.service';
 export * from './http.service';
 export * from './loader.service';

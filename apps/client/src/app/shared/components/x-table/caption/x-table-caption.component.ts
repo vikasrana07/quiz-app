@@ -8,7 +8,7 @@ import {
   ElementRef,
   HostListener,
   ViewEncapsulation,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import { GlobalConstants } from '@client-app/_constants';
 import { HttpCacheManager } from '@ngneat/cashew';
@@ -18,7 +18,7 @@ import * as FileSaver from 'file-saver';
   selector: 'x-table-caption',
   templateUrl: './x-table-caption.component.html',
   styleUrls: ['./x-table-caption.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class XTableCaptionComponent implements OnInit {
   showColunnCaption = false;
@@ -56,9 +56,7 @@ export class XTableCaptionComponent implements OnInit {
     private _elementRef: ElementRef,
     private manager: HttpCacheManager,
     private globalConstants: GlobalConstants
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.filterObject = this.globalConstants.filter;
@@ -86,7 +84,9 @@ export class XTableCaptionComponent implements OnInit {
   @HostListener('document:click', ['$event.path'])
   public onGlobalClick(targetElementPath: Array<any>) {
     if (targetElementPath) {
-      const elementRefInPath = targetElementPath.find(e => e === this._elementRef.nativeElement);
+      const elementRefInPath = targetElementPath.find(
+        (e) => e === this._elementRef.nativeElement
+      );
       if (!elementRefInPath) {
         this.showColunnCaption = false;
         this.showSearchOptions = false;
@@ -101,8 +101,10 @@ export class XTableCaptionComponent implements OnInit {
   toggleSearch() {
     const { x } = this.searchIcon.nativeElement.getBoundingClientRect();
     const leftMenuElement = document.querySelector('.dropdown-left-menu-slide');
-    const leftMargin = parseInt(leftMenuElement["style"].marginLeft.replace("px", ""));
-    const offsetWidth = leftMenuElement["offsetWidth"];
+    const leftMargin = parseInt(
+      leftMenuElement['style'].marginLeft.replace('px', '')
+    );
+    const offsetWidth = leftMenuElement['offsetWidth'];
     this.left = x - 375;
     if (leftMargin == 0) {
       this.left -= offsetWidth;
@@ -122,14 +124,17 @@ export class XTableCaptionComponent implements OnInit {
       const obj = {};
       this._selectedColumns.forEach((col) => {
         obj[col.header] = item[col.field];
-      })
+      });
       dataToExport.push(obj);
     });
     return dataToExport;
   }
 
   downloadCSV() {
-    if (typeof this.fileName != 'undefined' && typeof this.fileName == 'string') {
+    if (
+      typeof this.fileName != 'undefined' &&
+      typeof this.fileName == 'string'
+    ) {
       this.dataTable.exportFilename = this.fileName;
     } else {
       this.dataTable.exportFilename = 'download';
@@ -139,11 +144,14 @@ export class XTableCaptionComponent implements OnInit {
       tempArray = this.exportData;
       const dataToExport = this.parseExportData(tempArray);
 
-      import("xlsx").then(xlsx => {
+      import('xlsx').then((xlsx) => {
         const worksheet = xlsx.utils.json_to_sheet(dataToExport);
         const csv = xlsx.utils.sheet_to_csv(worksheet);
         const csvBuffer = this.getCSVBuffer(csv);
-        FileSaver.saveAs(new Blob([csvBuffer], { type: "application/octet-stream" }), this.dataTable.exportFilename+".CSV");
+        FileSaver.saveAs(
+          new Blob([csvBuffer], { type: 'application/octet-stream' }),
+          this.dataTable.exportFilename + '.CSV'
+        );
       });
     } else {
       this.dataTable.exportCSV();
@@ -153,12 +161,15 @@ export class XTableCaptionComponent implements OnInit {
   getCSVBuffer(s: any) {
     const buf = new ArrayBuffer(s.length);
     const view = new Uint8Array(buf);
-    for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xff;
     return buf;
   }
 
   downloadExcel() {
-    if (typeof this.fileName != 'undefined' && typeof this.fileName == 'string') {
+    if (
+      typeof this.fileName != 'undefined' &&
+      typeof this.fileName == 'string'
+    ) {
       this.dataTable.exportFilename = this.fileName;
     } else {
       this.dataTable.exportFilename = 'download';
@@ -173,19 +184,23 @@ export class XTableCaptionComponent implements OnInit {
       tempArray = this.exportData;
     }
     const dataToExport = this.parseExportData(tempArray);
-    import("xlsx").then(xlsx => {
+    import('xlsx').then((xlsx) => {
       const worksheet = xlsx.utils.json_to_sheet(dataToExport);
-      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
-      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, {
+        bookType: 'xlsx',
+        type: 'array',
+      });
       this.saveAsExcelFile(excelBuffer, this.dataTable.exportFilename);
     });
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const EXCEL_TYPE =
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
     const EXCEL_EXTENSION = '.xlsx';
     const data: Blob = new Blob([buffer], {
-      type: EXCEL_TYPE
+      type: EXCEL_TYPE,
     });
     FileSaver.saveAs(data, fileName + EXCEL_EXTENSION);
   }

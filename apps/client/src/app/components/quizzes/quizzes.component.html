@@ -1,0 +1,57 @@
+<div class="card">
+  <p-contextMenu #cm [model]="items"></p-contextMenu>
+  <x-table
+    [cols]="cols"
+    [dataKey]="'id'"
+    [captionTemplate]="captionButtonTemplate"
+    [name]="'Quizzes'"
+    [rows]="rows"
+    [templates]="[{ type: 'body', template: bodyTemplate }]"
+  >
+  </x-table>
+  <ng-template #captionButtonTemplate>
+    <button
+      title="Add New Quiz"
+      *hasPermission="['create_quiz']"
+      type="button"
+      class="p-button p-button-icon-only p-button-rounded"
+      pTooltip="Add New Quiz"
+      (click)="onAdd()"
+      tooltipPosition="top"
+    >
+      <i class="pi pi-plus"></i>
+    </button>
+  </ng-template>
+  <ng-template
+    let-row="row"
+    pTemplate="body"
+    let-columns="columns"
+    #bodyTemplate
+  >
+    <tr>
+      <td *ngFor="let col of columns" isEllipsisActive>
+        <span *ngIf="col.field === 'action'">
+          <quiz-app-three-dot-menu
+            *hasPermission="['update_quiz', 'delete_quiz']"
+            (clickFunction)="openMenu($event, cm, row)"
+          >
+          </quiz-app-three-dot-menu>
+        </span>
+        <span *ngIf="col.field !== 'action'">{{ row[col.field] }}</span>
+      </td>
+    </tr>
+  </ng-template>
+</div>
+<p-sidebar
+  [style]="{ width: '50%' }"
+  [(visible)]="displaySidebar"
+  *ngIf="displaySidebar"
+  position="right"
+>
+  <quiz-app-quiz-form
+    [action]="action"
+    (onAddUpdate)="onAddUpdate($event)"
+    [selectedRow]="selectedRow"
+  >
+  </quiz-app-quiz-form>
+</p-sidebar>

@@ -8,35 +8,57 @@ import {
   Param,
   HttpStatus,
   ClassSerializerInterceptor,
-  UseInterceptors
+  UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 
 import { QuestionsService } from './questions.service';
-import { QuestionsDTO } from './questions.dto';
+import { CreateQuestionDto } from './dto/create-question.dto';
+import { UpdateQuestionDto } from './dto/update-question.dto';
+import { Resource } from '../auth/decorators/resource.decorator';
+import { JwtGuard } from '../auth/guards/jwt.guard';
+import { ResourceGuard } from '../auth/guards/resource.guards';
 
 @Controller('questions')
 export class QuestionsController {
-  constructor(private questionsService: QuestionsService) { }
+  constructor(private questionsService: QuestionsService) {}
 
   @Get()
+  @Resource('list_question')
+  @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
   async showAllQuestions() {
-    const data = await this.questionsService.showAll();
+    const row = await this.questionsService.showAll();
     return {
       statusCode: HttpStatus.OK,
       message: 'Questions fetched successfully',
-      data
+      params: row,
+    };
+  }
+
+  @Get('types')
+  @Resource('list_question')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async showAllQuestionTypes() {
+    const row = await this.questionsService.showAllQuestionTypes();
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Question Types fetched successfully',
+      params: row,
     };
   }
 
   @Post()
+  @Resource('create_question')
+  @UseGuards(JwtGuard, ResourceGuard)
   @UseInterceptors(ClassSerializerInterceptor)
-  async createQuestion(@Body() body: QuestionsDTO) {
-    const data = await this.questionsService.create(body);
+  async createQuestion(@Body() body: CreateQuestionDto) {
+    const row = await this.questionsService.create(body);
     return {
       statusCode: HttpStatus.OK,
       message: 'Question created successfully',
-      data
+      params: row,
     };
   }
 
@@ -51,15 +73,24 @@ export class QuestionsController {
   } */
 
   @Patch(':id')
-  async updateQuestion(@Param('id') id: number, @Body() data: Partial<QuestionsDTO>) {
-    await this.questionsService.update(id, data);
+  @Resource('update_question')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async updateQuestion(
+    @Param('id') id: number,
+    @Body() data: Partial<UpdateQuestionDto>
+  ) {
+    const row = await this.questionsService.update(id, data);
     return {
       statusCode: HttpStatus.OK,
       message: 'Question updated successfully',
+      params: row,
     };
   }
 
   @Delete(':id')
+  @Resource('delete_question')
+  @UseGuards(JwtGuard, ResourceGuard)
   async deleteQuestion(@Param('id') id: number) {
     await this.questionsService.delete(id);
     return {

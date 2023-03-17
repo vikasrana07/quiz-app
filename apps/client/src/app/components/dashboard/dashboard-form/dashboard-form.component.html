@@ -1,0 +1,28 @@
+<span class="text-color-secondary font-medium">{{action === 'add' ? 'Add':'Edit'}} Dashboard</span>
+<form class="mt-2" [formGroup]="dashboardForm" (ngSubmit)="onSubmit()" autocomplete="off">
+  <div class="card p-fluid">
+    <div class="field grid">
+      <label htmlfor="name" class="col-12 mb-2 md:col-4 md:mb-0">Name</label>
+      <div class="col-12 md:col-8"><input aria-label="Name" pInputText id="name" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"></div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="description" class="col-12 mb-2 md:col-4 md:mb-0">Description</label>
+      <div class="col-12 md:col-8"><input aria-label="Description" pInputText id="description" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.description.errors }"
+          formControlName="description">
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="description" class="col-12 mb-2 md:col-4 md:mb-0">Is Primary</label>
+      <div class="col-12 md:col-8">
+        <p-checkbox name="isPrimary" value="1" [binary]="true" formControlName="isPrimary"></p-checkbox>
+
+      </div>
+    </div>
+  </div>
+  <div class="mt-5"></div>
+  <div class="flex justify-content-end">
+    <button type="submit" pButton>Save</button>
+  </div>
+</form>

@@ -1,0 +1,112 @@
+<div class="card p-2">
+  <p-steps [model]="items" [(activeIndex)]="activeIndex"></p-steps>
+</div>
+<form class="form" [formGroup]="configureWidgetForm">
+  <div *ngIf="activeIndex===0">
+    <div class="mt-2">
+      <p-card>
+        <ng-template pTemplate="content">
+          <div class="col-12" *ngFor="let widget of masterData">
+            <p-radioButton [inputId]="widget.code" [value]="widget" [label]="widget.label" formControlName="widgetCode">
+            </p-radioButton>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-end">
+            <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+  <div *ngIf="activeIndex===1">
+    <div class="mt-2">
+      <p-card>
+        <ng-template pTemplate="content">
+          <div class="col-sm-12">
+
+            <div class="row">
+              <label for="" class="col-sm-3 col-form-label text-left mt-2">Label Name:</label>
+              <p class="col-sm-6 col-form-label">
+                <input maxlength="20" formControlName="labelName" type="text" class="form-control" pInputText
+                  [ngClass]="{'is-invalid': isFormSubmitted  && formControls.labelName.errors }" />
+              </p>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-between">
+            <p-button label="Back" icon="pi pi-angle-left" iconPos="left"></p-button>
+            <p-button label="Next" icon="pi pi-angle-right" iconPos="right"></p-button>
+          </div>
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+  <div *ngIf="activeIndex===2">
+    <div class="mt-2">
+      <p-card>
+
+        <ng-template pTemplate="content">
+          <!-- <div class="col-sm-12">
+            <div class="row">
+              <div class="col-sm-8">
+                <div class="row">
+                  <label class="col-sm-3 col-form-label text-end p-0 mt-3">Widget Style: </label>
+                  <p class="col-sm-5 col-form-label">
+                    <p-dropdown [options]="widgetStyles" optionLabel="name" placeholder="Select Widget Style"
+                      formControlName="widgetStyle" (onChange)="onWidgetStyleChange()" class="form-control"
+                      [ngClass]="{'is-invalid': isFormSubmitted  && formControls.widgetStyle.errors }">
+                      <ng-template pTemplate="selectedItem">
+                        <div class="widget-item widget-item-value" *ngIf="selectedWidgetStyle">
+                          <div>
+                            <i [class]="selectedWidgetStyle.icon"></i> {{selectedWidgetStyle.name}}
+                          </div>
+                        </div>
+                      </ng-template>
+                      <ng-template let-country pTemplate="item">
+                        <div class="widget-item">
+                          <div>
+                            <i [class]="country.icon"></i> {{country.name}}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </p>
+                </div>
+                <div class="row mt-3">
+                  <label class="col-sm-3 col-form-label text-end p-0 mt-3">Type: </label>
+                  <p class="col-sm-5 col-form-label">
+                    <p-dropdown class="form-control" [options]="widgetTypes" placeholder="Select Type"
+                      optionLabel="label" optionValue="key" [filter]="true" class="form-control"
+                      formControlName="widgetType">
+                    </p-dropdown>
+                  </p>
+                </div>
+                <div class="row mt-3">
+                  <label class="col-sm-3 col-form-label text-end p-0 mt-3">Preview: </label>
+                  <p class="col-sm-5 col-form-label mt-2">
+                    <p-inputSwitch (onChange)="onPreviewChange()"
+                      [disabled]="!configureWidgetForm.controls.widgetStyle.value || !configureWidgetForm.controls.widgetType.value">
+                    </p-inputSwitch>
+                  </p>
+                </div>
+              </div>
+              <div class="col-sm-4 flex justify-content-end">
+                <ndc-dynamic *ngIf="isPreview" [ndcDynamicComponent]=components[selectedWidgetStyle.component]
+                  [ndcDynamicInputs]="{widget:widget,isPreview:isPreview}">
+                </ndc-dynamic>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <div class="flex justify-content-between">
+            <p-button label="Back" icon="pi pi-angle-left" iconPos="left"></p-button>
+            <p-button label="Submit" icon="pi pi-angle-right" iconPos="right"></p-button>
+          </div>-->
+        </ng-template>
+      </p-card>
+    </div>
+  </div>
+</form>

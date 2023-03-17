@@ -6,9 +6,7 @@ import { Category } from '../../_models';
 import { HttpService } from '../../_services';
 @Injectable()
 export class CategoriesService {
-  constructor(
-    private httpService: HttpService
-  ) { }
+  constructor(private httpService: HttpService) {}
 
   getCategories(): Observable<HttpResponse<Category>> {
     return this.httpService.get('categories');
@@ -23,5 +21,4 @@ export class CategoriesService {
   deleteCategory(id: number): Observable<HttpResponse<any>> {
     return this.httpService.delete('categories/' + id);
   }
-
 }

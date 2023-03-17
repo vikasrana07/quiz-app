@@ -1,24 +1,27 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, Not } from 'typeorm';
 
-import { CategoriesEntity } from './categories.entity';
-import { CategoriesDTO } from './categories.dto';
+import { Category } from './entities/category.entity';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(
-    @InjectRepository(CategoriesEntity)
-    private categoryRepository: Repository<CategoriesEntity>,
-  ) { }
+    @InjectRepository(Category)
+    private categoryRepository: Repository<Category>
+  ) {}
 
   async showAll() {
     return await this.categoryRepository.find();
   }
 
-  async create(body: CategoriesDTO) {
-    const username = await this.categoryRepository.findOne({ where: { name: body.name } });
-    if (username != null) {
+  async create(body: CreateCategoryDto) {
+    const row = await this.categoryRepository.findOne({
+      where: { name: body.name },
+    });
+    if (row != null) {
       throw new HttpException('Category already exists', HttpStatus.CONFLICT);
     } else {
       const data = this.categoryRepository.create(body);
@@ -26,8 +29,17 @@ export class CategoriesService {
     }
   }
 
-  async update(id: number, data: Partial<CategoriesDTO>) {
-    await this.categoryRepository.update({ id }, data);
+  async update(id: number, updateCategoryDto: Partial<UpdateCategoryDto>) {
+    const row = await this.categoryRepository.findOne({
+      where: { name: updateCategoryDto.name, id: Not(id) },
+    });
+    if (row) {
+      throw new HttpException(
+        'Category already exists.',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+    await this.categoryRepository.update({ id }, updateCategoryDto);
     return await this.categoryRepository.findOne({ where: { id: id } });
   }
 

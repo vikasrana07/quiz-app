@@ -7,27 +7,29 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { SidebarToggleDirective, SidebarMenuToggleDirective } from '../_directives';
+import { SidebarModule } from 'primeng/sidebar';
+import { AvatarModule } from 'primeng/avatar';
+
+import {
+  SidebarToggleDirective,
+  SidebarMenuToggleDirective,
+} from '../_directives';
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
     ConfirmDialogModule,
-    TooltipModule
+    TooltipModule,
+    SidebarModule,
+    AvatarModule,
   ],
-  exports: [
-    FooterComponent,
-    HeaderComponent,
-    SidebarComponent
-  ],
+  exports: [FooterComponent, HeaderComponent, SidebarComponent],
   declarations: [
     FooterComponent,
     HeaderComponent,
     SidebarComponent,
     SidebarToggleDirective,
-    SidebarMenuToggleDirective
+    SidebarMenuToggleDirective,
   ],
-  providers: [ConfirmationService]
 })
-export class LayoutModule { }
+export class LayoutModule {}

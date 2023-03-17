@@ -4,16 +4,20 @@
         [rows]="rows" [templates]="[{type:'body',template:bodyTemplate}]">
     </x-table>
     <ng-template #captionButtonTemplate>
-        <button aria-label="Add" type="button" class="p-button p-button-icon-only p-button-rounded"
-            pTooltip="Add New Category" (click)="add()" tooltipPosition="top">
+        <button title="Add New Category" *hasPermission="['create_category']" type="button"
+            class="p-button p-button-icon-only p-button-rounded" pTooltip="Add New Category" (click)="add()"
+            tooltipPosition="top">
             <i class="pi pi-plus"></i>
         </button>
     </ng-template>
     <ng-template let-row="row" pTemplate="body" let-columns="columns" #bodyTemplate>
         <tr>
             <td *ngFor="let col of columns" isEllipsisActive>
-                <quiz-app-three-dot-menu *ngIf="col.field === 'action'" (clickFunction)="openMenu($event, cm, row)">
-                </quiz-app-three-dot-menu>
+                <span *ngIf="col.field === 'action'">
+                    <quiz-app-three-dot-menu *hasPermission="['update_category','delete_category']"
+                        (clickFunction)="openMenu($event, cm, row)">
+                    </quiz-app-three-dot-menu>
+                </span>
                 <span *ngIf="col.field !== 'action'">{{row[col.field]}}</span>
             </td>
         </tr>

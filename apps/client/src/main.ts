@@ -22,20 +22,19 @@ import {
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   bgsSize: 20,
-  pbColor: "#1e8a95",
-  fgsColor: "#1e8a95",
+  pbColor: '#3B82F6',
+  fgsColor: '#3B82F6',
   bgsType: SPINNER.rectangleBounce,
   fgsType: SPINNER.threeStrings,
   pbDirection: PB_DIRECTION.leftToRight,
   pbThickness: 5,
   text: 'Please wait...',
-  gap: 10
+  gap: 10,
 };
 
 const logger = {
-  level: environment.production ? NgxLoggerLevel.OFF : NgxLoggerLevel.DEBUG
+  level: environment.production ? NgxLoggerLevel.OFF : NgxLoggerLevel.DEBUG,
 };
-
 
 if (environment.production) {
   enableProdMode();
@@ -50,6 +49,6 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(NgxUiLoaderModule.forRoot(ngxUiLoaderConfig)),
     importProvidersFrom(LoggerModule.forRoot(logger)),
     MessageService,
-    ConfirmationService
-  ]
+    ConfirmationService,
+  ],
 });

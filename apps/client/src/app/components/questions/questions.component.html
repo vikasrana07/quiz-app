@@ -4,18 +4,26 @@
         [templates]="[{type:'body',template:bodyTemplate}]">
     </x-table>
     <ng-template #captionButtonTemplate>
-        <button type="button" class="p-button p-button-icon-only p-button-rounded" pTooltip="Add New Question"
-            (click)="add()" tooltipPosition="top">
+        <button title="Add New Question" *hasPermission="['create_question']" type="button"
+            class="p-button p-button-icon-only p-button-rounded" pTooltip="Add New Question" (click)="onAdd()"
+            tooltipPosition="top">
             <i class="pi pi-plus"></i>
         </button>
     </ng-template>
     <ng-template let-row="row" pTemplate="body" let-columns="columns" #bodyTemplate>
         <tr>
             <td *ngFor="let col of columns" isEllipsisActive>
-                <quiz-app-three-dot-menu *ngIf="col.field === 'action'" (clickFunction)="openMenu($event, cm, row)">
-                </quiz-app-three-dot-menu>
-                <span *ngIf="col.field !== 'action'">{{row[col.field]}}</span>
+                <span *ngIf="col.field === 'action'">
+                    <quiz-app-three-dot-menu *hasPermission="['update_question','delete_question']"
+                        (clickFunction)="openMenu($event, cm, row)">
+                    </quiz-app-three-dot-menu>
+                </span>
+                <span *ngIf="col.field !== 'action'" [innerHTML]="row[col.field]"></span>
             </td>
         </tr>
     </ng-template>
 </div>
+<p-sidebar [style]="{width:'60%'}" [(visible)]="displaySidebar" *ngIf="displaySidebar" position="right">
+    <quiz-app-question-form [action]="action" (onAddUpdate)="onAddUpdate($event)" [selectedRow]="selectedRow">
+    </quiz-app-question-form>
+</p-sidebar>

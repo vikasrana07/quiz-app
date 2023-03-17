@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { AlertService, LoaderService } from '../../_services';
@@ -7,14 +12,21 @@ import { SettingsService } from './settings.service';
 import { Setting } from '../../_models';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
-
+import { HasPermissionDirective } from '../../_directives';
 
 @Component({
   selector: 'quiz-app-settings',
   templateUrl: './settings.component.html',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, ButtonModule, InputTextModule, InputNumberModule],
-  providers: [SettingsService]
+  imports: [
+    HasPermissionDirective,
+    ReactiveFormsModule,
+    CommonModule,
+    ButtonModule,
+    InputTextModule,
+    InputNumberModule,
+  ],
+  providers: [SettingsService],
 })
 export class SettingsComponent implements OnInit {
   isSubmitted!: boolean;
@@ -24,7 +36,7 @@ export class SettingsComponent implements OnInit {
     private alertService: AlertService,
     private loaderService: LoaderService,
     private settingsService: SettingsService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.createSettingForm();
@@ -33,32 +45,34 @@ export class SettingsComponent implements OnInit {
   createSettingForm() {
     this.settingForm = new FormGroup({
       timePerQuestion: new FormControl('', [Validators.required]),
-      coinPerAnswer: new FormControl('', [Validators.required])
+      coinPerAnswer: new FormControl('', [Validators.required]),
     });
   }
 
   getSettings() {
     this.loaderService.start();
-    this.settingsService
-      .getSettings()
-      .subscribe({
-        next: (response: any) => {
-          const setting: any = {};
-          response.data.forEach((element: { key: string | number; value: any; }) => {
+    this.settingsService.getSettings().subscribe({
+      next: (response: any) => {
+        const setting: any = {};
+        response.params.forEach(
+          (element: { key: string | number; value: any }) => {
             setting[element.key] = element.value;
-          });
+          }
+        );
 
-          this.settingForm.patchValue(setting);
-          this.loaderService.stop();
-        },
-        error: (error: any) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
-        }
-      });
+        this.settingForm.patchValue(setting);
+        this.loaderService.stop();
+      },
+      error: (error: any) => {
+        this.loaderService.stop();
+        this.alertService.error(error);
+      },
+    });
   }
 
-  get formControls(): any { return this.settingForm.controls; }
+  get formControls(): any {
+    return this.settingForm.controls;
+  }
 
   onSubmit() {
     this.isSubmitted = true;
@@ -66,29 +80,30 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
-    const data: any = [{
-      key: "timePerQuestion",
-      value: this.formControls.timePerQuestion.value,
-    }, {
-      key: "coinPerAnswer",
-      value: this.formControls.coinPerAnswer.value
-    }]
+    const data: any = [
+      {
+        key: 'timePerQuestion',
+        value: this.formControls.timePerQuestion.value,
+      },
+      {
+        key: 'coinPerAnswer',
+        value: this.formControls.coinPerAnswer.value,
+      },
+    ];
     this.updateSetting(data);
   }
 
   updateSetting(data: any) {
     this.loaderService.start();
-    this.settingsService
-      .updateSetting(data)
-      .subscribe({
-        next: (response: any) => {
-          this.loaderService.stop();
-          this.alertService.success(response["message"]);
-        },
-        error: (error: any) => {
-          this.loaderService.stop();
-          this.alertService.error(error);
-        }
-      });
+    this.settingsService.updateSetting(data).subscribe({
+      next: (response: any) => {
+        this.loaderService.stop();
+        this.alertService.success(response['message']);
+      },
+      error: (error: any) => {
+        this.loaderService.stop();
+        this.alertService.error(error);
+      },
+    });
   }
 }

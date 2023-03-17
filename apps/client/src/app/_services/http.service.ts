@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class HttpService {
   url: string;
@@ -13,7 +13,9 @@ export class HttpService {
   }
 
   post(apiRoute: string, body: any): Observable<any> {
-    return this.httpClient.post(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
+    return this.httpClient.post(`${this.url + apiRoute}`, body, {
+      headers: this.getHttpHeaders(),
+    });
   }
 
   get(apiRoute: string): Observable<any> {
@@ -23,15 +25,21 @@ export class HttpService {
   }
 
   put(apiRoute: string, body: any): Observable<any> {
-    return this.httpClient.put(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
+    return this.httpClient.put(`${this.url + apiRoute}`, body, {
+      headers: this.getHttpHeaders(),
+    });
   }
 
   patch(apiRoute: string, body: any): Observable<any> {
-    return this.httpClient.patch(`${this.url + apiRoute}`, body, { headers: this.getHttpHeaders() });
+    return this.httpClient.patch(`${this.url + apiRoute}`, body, {
+      headers: this.getHttpHeaders(),
+    });
   }
 
   delete(apiRoute: string): Observable<any> {
-    return this.httpClient.delete(`${this.url + apiRoute}`, { headers: this.getHttpHeaders() });
+    return this.httpClient.delete(`${this.url + apiRoute}`, {
+      headers: this.getHttpHeaders(),
+    });
   }
 
   getHttpHeaders(): HttpHeaders {

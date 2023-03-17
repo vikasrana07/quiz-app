@@ -2,95 +2,75 @@ import {
   Controller,
   Get,
   Post,
-  Delete,
   Body,
+  Patch,
   Param,
-  HttpStatus,
+  Delete,
+  UseGuards,
   ClassSerializerInterceptor,
   UseInterceptors,
-  HttpException,
-  UsePipes,
-  ValidationPipe,
-  UseGuards
+  HttpStatus,
 } from '@nestjs/common';
-
-import * as bcrypt from 'bcrypt';
-
 import { UsersService } from './users.service';
-import { UsersDTO } from './users.dto';
-import { Roles } from '../roles/roles.decorator';
-import Role from '../roles/roles.enum';
-import { RolesGuard } from '../roles/roles.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { Resource } from './../auth/decorators/resource.decorator';
+import { JwtGuard } from './../auth/guards/jwt.guard';
+import { ResourceGuard } from './../auth/guards/resource.guards';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) { }
-
-  @Get()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
-  async showAllUsers() {
-    const data = await this.usersService.showAll();
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Users fetched successfully',
-      data
-    };
-  }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async createUser(@Body() data: UsersDTO) {
-
-    const hashedPassword = await bcrypt.hash(data.password, 10);
-    try {
-      const createdUser = await this.usersService.create({
-        ...data,
-        password: hashedPassword
-      });
-      createdUser.password = undefined;
-      return createdUser;
-    } catch (error) {
-      /* if (error?.code === PostgresErrorCode.UniqueViolation) {
-        throw new HttpException('User with that email already exists', HttpStatus.BAD_REQUEST);
-      } */
-      throw new HttpException(error?.message, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    /* const user = await this.UserService.create(data);
+  @Resource('create_user')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(@Body() createUserDto: CreateUserDto) {
+    const row = await this.usersService.create(createUserDto);
     return {
-      statusCode: HttpStatus.OK,
+      params: row,
       message: 'User created successfully',
-      user
-    }; */
+      statusCode: HttpStatus.OK,
+    };
   }
 
-  /* @Get(':id')
-  async readUser(@Param('id') id: number) {
-    const data = await this.usersService.findOne(id);
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'User fetched successfully',
-      data,
-    };
-  } */
+  @Get()
+  @Resource('list_user')
+  @UseGuards(JwtGuard, ResourceGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
+  findAll() {
+    return this.usersService.findAll();
+  }
 
-  /* @Patch(':id')
-  async uppdateUser(@Param('id') id: number, @Body() data: Partial<UsersDTO>) {
-    await this.UserService.update(id, data);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.usersService.findOne(+id);
+  }
+
+  @Patch(':id')
+  @Resource('update_user')
+  @UseGuards(JwtGuard, ResourceGuard)
+  async update(
+    @Param('id') id: number,
+    @Body() updateUserDto: Partial<UpdateUserDto>
+  ) {
+    const row = await this.usersService.update(+id, updateUserDto);
     return {
-      statusCode: HttpStatus.OK,
+      params: row,
       message: 'User updated successfully',
+      statusCode: HttpStatus.OK,
     };
-  } */
+  }
 
   @Delete(':id')
-  async deleteUser(@Param('id') id: number) {
-    await this.usersService.destroy(id);
+  @Resource('delete_user')
+  @UseGuards(JwtGuard, ResourceGuard)
+  async remove(@Param('id') id: string) {
+    const row = await this.usersService.remove(+id);
     return {
-      statusCode: HttpStatus.OK,
       message: 'User deleted successfully',
+      data: row,
     };
   }
 }

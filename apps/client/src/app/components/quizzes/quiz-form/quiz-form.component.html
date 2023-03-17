@@ -1,0 +1,36 @@
+<form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+  <div class="card p-fluid">
+    <div class="field grid">
+      <label htmlfor="name" class="col-12 md:col-2">Name</label>
+      <div class="col-12 md:col-10"><input aria-label="Name" pInputText id="name" type="text"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.name.errors }" formControlName="name"></div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="description" class="col-12 md:col-2">Description</label>
+      <div class="col-12 md:col-10">
+        <p-editor [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.description.errors }"
+          formControlName="description" [style]="{'height':'100px'}"></p-editor>
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="startTime" class="col-12 md:col-2">Start Time</label>
+      <div class="col-12 md:col-10">
+        <p-calendar dateFormat="yy-mm-dd"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.startTime.errors }"
+          formControlName="startTime" [showTime]="true" [hourFormat]="'12'"></p-calendar>
+      </div>
+    </div>
+    <div class="field grid">
+      <label htmlfor="endTime" class="col-12 md:col-2">End Time</label>
+      <div class="col-12 md:col-10">
+        <p-calendar dateFormat="yy-mm-dd"
+          [ngClass]="{ 'ng-invalid ng-dirty': isSubmitted && formControls.endTime.errors }" formControlName="endTime"
+          [showTime]="true" [hourFormat]="'12'"></p-calendar>
+      </div>
+    </div>
+  </div>
+  <div class="mt-5"></div>
+  <div class="flex justify-content-end">
+    <button type="submit" pButton>Save</button>
+  </div>
+</form>

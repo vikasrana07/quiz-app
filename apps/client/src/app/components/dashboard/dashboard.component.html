@@ -1,4 +1,4 @@
-<div class="grid">
+<!-- <div class="grid">
     <div class="col-12 md:col-6 xl:col-3">
         <div class="card h-full"><span class="font-semibold text-lg">Sales</span>
             <div class="flex justify-content-between align-items-start mt-3">
@@ -67,4 +67,144 @@
             </div>
         </div>
     </div>
+</div> -->
+<div class="col-12 md:col-12 mb-2 p-0">
+  <p-toolbar>
+    <div class="p-toolbar-group-left col-6 md:col-4">
+      <p-dropdown
+        styleClass="w-full"
+        [options]="dashboards"
+        [(ngModel)]="selectedDashboard"
+        optionLabel="name"
+        placeholder="Select Dashboard"
+        [filter]="true"
+        (onChange)="onDashboardChange()"
+      >
+      </p-dropdown>
+    </div>
+    <div
+      class="p-toolbar-group-right justify-content-end col-6 md:col-8"
+      *ngIf="selectedDashboard?.id"
+    >
+      <p-button
+        icon="pi pi-plus"
+        (click)="onAddDashboard()"
+        *hasPermission="['create_dashboard']"
+        styleClass="mr-2"
+        pTooltip="Add New Dashboard"
+        tooltipPosition="top"
+      >
+      </p-button>
+      <p-button
+        icon="pi pi-refresh"
+        styleClass="mr-2"
+        pTooltip="Refresh Dashboard"
+        tooltipPosition="left"
+      >
+      </p-button>
+      <p-button
+        [icon]="lockIcon"
+        *hasPermission="['update_widget']"
+        styleClass="mr-2"
+        tooltipPosition="top"
+        (click)="toggleEdit()"
+      >
+      </p-button>
+      <p-button
+        icon="pi pi-ellipsis-h"
+        *hasPermission="['update_widget']"
+        styleClass="mr-2"
+        (click)="menu.toggle($event)"
+      >
+      </p-button>
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
+    </div>
+  </p-toolbar>
 </div>
+<gridster [options]="options" *ngIf="selectedDashboard?.widgets?.length !== 0">
+  <ng-container
+    *ngFor="let item of selectedDashboard?.widgets"
+    style="overflow: hidden"
+  >
+    <gridster-item class="card" id="{{ item.id }}" [item]="item">
+      <div class="flex justify-content-end">
+        <div *ngIf="!isLocked">
+          <span
+            *hasPermission="['edit_widget']"
+            class="flex align-items-center justify-content-end"
+          >
+            <i
+              class="fa-solid fa-arrows-up-down-left-right action-icon cursor-pointer drag-handler"
+              pTooltip="Move"
+              tooltipPosition="top"
+            ></i
+            >&nbsp;
+
+            <i
+              class="pi pi-trash action-icon cursor-pointer"
+              pTooltip="Delete Widget"
+              tooltipPosition="top"
+            ></i
+            >&nbsp;
+          </span>
+        </div>
+      </div>
+      <ndc-dynamic
+        [ndcDynamicComponent]="components[item.type]"
+        [ndcDynamicInputs]="{ widget: item }"
+      >
+      </ndc-dynamic>
+      <!-- <div class="h-100 mb-0">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <span class=""> {{item}} </span>
+                    </div>
+                    <div *ngIf="!isLocked">
+                        <span *hasPermission="['admin_edit_widget']"
+                            class="d-flex align-items-center justify-content-center">
+                            <i class="fa-solid fa-arrows-up-down-left-right action-icon cursor-pointer drag-handler"
+                                pTooltip="Move" tooltipPosition="top"></i>&nbsp;
+
+                            <i class="pi pi-trash action-icon cursor-pointer" pTooltip="Delete Widget"
+                                tooltipPosition="top"></i>&nbsp;
+                        </span>
+                    </div>
+                </div>
+                <ndc-dynamic [ndcDynamicComponent]="components[item.type]" [ndcDynamicInputs]="{widget:item}">
+                </ndc-dynamic>
+            </div> -->
+    </gridster-item>
+  </ng-container>
+</gridster>
+<div *ngIf="selectedDashboard?.widgets?.length === 0">
+  <div class="flex justify-content-start" *hasPermission="['create_widget']">
+    <div class="col-12 md:col-6 xl:col-3 p-0">
+      <div class="card h-full">
+        <div class="flex justify-content-center align-items-center mt-3 p-4">
+          <div class="mb-4">
+            <span
+              class="text-4xl font-bold text-900 cursor-pointer"
+              (click)="onConfigureWidget()"
+            >
+              <i class="pi pi-plus text-xs mr-2"></i>
+              <span class="font-semibold text-lg">Add Widget</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-sidebar
+  [style]="{ width: '50%' }"
+  [(visible)]="displaySidebar"
+  *ngIf="displaySidebar"
+  position="right"
+>
+  <quiz-app-dashboard-form
+    [action]="action"
+    (onAddUpdate)="onAddUpdate($event)"
+    [selectedDashboard]="selectedDashboard"
+  >
+  </quiz-app-dashboard-form>
+</p-sidebar>

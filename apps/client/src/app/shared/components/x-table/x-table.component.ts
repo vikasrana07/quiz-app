@@ -6,7 +6,7 @@ import {
   Input,
   OnInit,
   TemplateRef,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -39,16 +39,16 @@ export interface ITemplateType {
     InputTextModule,
     ChipModule,
     CheckboxModule,
-    DropdownModule
+    DropdownModule,
   ],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class XTableComponent implements OnInit {
   selectedColumns: [] = [];
   globalFilterFields: any[] = [];
   paginationObject: any;
   @Input() captionTemplate: any;
-  @Input() name: any = "Records";
+  @Input() name: any = 'Records';
   @Input() dataKey!: string;
   @Input() cols: any;
   @Input() rows: any;
@@ -56,10 +56,7 @@ export class XTableComponent implements OnInit {
   header!: boolean;
   body!: boolean;
   rowexpansion!: boolean;
-  constructor(
-    private constants: Constants
-  ) {
-  }
+  constructor(private constants: Constants) {}
 
   ngOnInit(): void {
     this.paginationObject = this.constants.pagination;
@@ -80,10 +77,10 @@ export class XTableComponent implements OnInit {
       this.dataKey = this.cols[0].field;
     }
     this.cols.forEach((element: any) => {
-      if (!element.hasOwnProperty("sort")) {
+      if (!element.hasOwnProperty('sort')) {
         element.sort = true;
       }
-      if (!element.hasOwnProperty("filter")) {
+      if (!element.hasOwnProperty('filter')) {
         element.filter = true;
       }
       if (element.filter) {
@@ -92,6 +89,4 @@ export class XTableComponent implements OnInit {
     });
     this.selectedColumns = this.cols;
   }
-
-
 }

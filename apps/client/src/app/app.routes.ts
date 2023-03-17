@@ -5,42 +5,84 @@ import { AuthGuard } from './_helpers';
 
 export const APP_ROUTES: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: '404', loadComponent: () => import('./components/notfound/notfound.component').then(m => m.NotFoundComponent), data: { appLayout: false } },
+  {
+    path: '404',
+    loadComponent: () =>
+      import('./components/notfound/notfound.component').then(
+        (m) => m.NotFoundComponent
+      ),
+    data: { appLayout: false },
+  },
   {
     path: 'login',
-    loadChildren: () => import('./components/login/login.routes').then(m => m.LOGIN_ROUTES),
-    title: 'Login', data: { appLayout: false }
+    loadChildren: () =>
+      import('./components/login/login.routes').then((m) => m.LOGIN_ROUTES),
+    title: 'Login',
+    data: { appLayout: false },
   },
   {
     path: 'dashboard',
-    loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    loadComponent: () =>
+      import('./components/dashboard/dashboard.component').then(
+        (m) => m.DashboardComponent
+      ),
     canActivate: [AuthGuard],
-    title: 'Dashboard'
+    title: 'Dashboard',
   },
   {
     path: 'categories',
-    loadChildren: () => import('./components/categories/categories.routes').then(m => m.CATEGORIES_ROUTES),
+    loadChildren: () =>
+      import('./components/categories/categories.routes').then(
+        (m) => m.CATEGORIES_ROUTES
+      ),
     canActivate: [AuthGuard],
-    title: 'Categories'
+    title: 'Categories',
+  },
+  {
+    path: 'quizzes',
+    loadComponent: () =>
+      import('./components/quizzes/quizzes.component').then(
+        (m) => m.QuizzesComponent
+      ),
+    canActivate: [AuthGuard],
+    title: 'Quizzes',
   },
   {
     path: 'questions',
-    loadComponent: () => import('./components/questions/questions.component').then(m => m.QuestionsComponent),
+    loadComponent: () =>
+      import('./components/questions/questions.component').then(
+        (m) => m.QuestionsComponent
+      ),
     canActivate: [AuthGuard],
-    title: 'Questions'
+    title: 'Questions',
   },
   {
     path: 'users',
-    loadComponent: () => import('./components/users/users.component').then(m => m.UsersComponent),
+    loadComponent: () =>
+      import('./components/users/users.component').then(
+        (m) => m.UsersComponent
+      ),
     canActivate: [AuthGuard],
-    title: 'Users'
+    title: 'Users',
+  },
+  {
+    path: 'roles',
+    loadComponent: () =>
+      import('./components/roles/roles.component').then(
+        (m) => m.RolesComponent
+      ),
+    canActivate: [AuthGuard],
+    title: 'Roles',
   },
   {
     path: 'settings',
-    loadComponent: () => import('./components/settings/settings.component').then(m => m.SettingsComponent),
+    loadComponent: () =>
+      import('./components/settings/settings.component').then(
+        (m) => m.SettingsComponent
+      ),
     canActivate: [AuthGuard],
-    title: 'Settings'
+    title: 'Settings',
   },
   // otherwise redirect to 404
-  { path: '**', redirectTo: '/404' }
+  { path: '**', redirectTo: '/404' },
 ];
